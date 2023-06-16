@@ -9,7 +9,7 @@ import java.util.Set;
 @Table
 public class Building {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;

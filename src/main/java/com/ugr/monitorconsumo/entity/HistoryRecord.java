@@ -9,7 +9,7 @@ import java.util.Objects;
 @Table
 public class HistoryRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Timestamp date;
