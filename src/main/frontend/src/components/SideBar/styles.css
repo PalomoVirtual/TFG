@@ -1,0 +1,40 @@
+.nuevoEdificio{
+    margin-bottom: 30px;
+    margin-left: 30px;
+    margin-right: 30px;
+    border-color: #dddddd;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    font-family: "Montserrat";
+    color: #ffffff;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+}
+
+.nuevoEdificio:hover{
+    cursor: pointer;
+    background-color: #5a5a5a;
+}
+
+.sideBar{
+    background-color: #646464;
+    height: 100%;
+    width: 322px;
+    padding-top: 15px;
+    box-sizing: border-box;
+}
+
+.displayNone{
+    display: none;
+}
+
+.nuevoEdificioIcon{
+    color: #ffffff;
+    width: 26.25px;
+    height: 30px;
+    margin-right: 8px;
+}

@@ -1,0 +1,45 @@
+.edificio{
+    margin-left: 5px;
+    margin-right: 5px;
+    border-radius: 10px;
+    padding: 10px;
+    font-family: "Montserrat";
+    font-size: 24px;
+    color: #ffffff
+}
+
+.edificio:hover{
+    cursor: pointer;
+    background-color: #545454;
+}
+
+.edificioIcon{
+    width: 23.42px;
+    height: 29px;
+    margin-right: 10px;
+    color: #dddddd;
+}
+
+.edificioName{
+    flex-grow: 1;
+    text-align: start;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.edificioIconSelected{
+    width: 23.42px;
+    height: 29px;
+    margin-right: 10px;
+    color: #ffffff;
+}
+
+.edificioNameSelected{
+    flex-grow: 1;
+    text-align: start;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    font-weight: bold;
+}

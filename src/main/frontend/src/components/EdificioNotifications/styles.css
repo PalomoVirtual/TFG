@@ -1,0 +1,88 @@
+.marcoNotifications{
+    background-color: #008080;
+    border-radius: 20px;
+    flex-grow: 1;
+    font-family: "Montserrat";
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.tituloMarco{
+    margin-top: 30px;
+    margin-bottom: 80px;
+}
+
+.inputNotificaciones{
+    margin-left: 60px;
+    border-radius: 18px 0px 0px 18px;
+    border-style: none none solid none;
+    border-color: #ffffff;
+    border-width: 4px;
+
+    font-family: "Montserrat";
+    font-size: 24px;
+    color: #ffffff;
+    background-color: rgba(0, 0, 0, 0.19);
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+
+    flex-grow: 1;
+}
+
+.inputNotificaciones:focus-visible{
+    outline: none;
+}
+
+.conjuntoInputIndividual{
+    margin-bottom: 50px;
+}
+
+.parteDerechaInput{
+    border-radius: 0px 18px 18px 0px;
+    border-style: none none solid none;
+    border-color: #ffffff;
+    border-width: 4px;
+    margin-right: 60px;
+
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.19);
+    padding-right: 15px;
+    padding-top: 15px;
+    padding-bottom: 10px;
+}
+
+form{
+    margin-bottom: 120px;
+}
+
+.buttonsNotifications{
+    justify-content: space-evenly;
+}
+
+.buttonConfirmar{
+    border-radius: 12px;
+    border-style: solid;
+    border-color: #dddddd;
+    border-width: 1px;
+    font-family: "Montserrat";
+    font-size: 24px;
+    color: #ffffff;
+    background-color: #008080;
+    padding-left: 30px;
+    padding-right: 30px;
+    cursor: pointer;
+    /* margin-left: 30px; */
+}
+
+.buttonConfirmar:hover{
+    background-color: rgba(0, 0, 0, 0.08);
+}
+
+.toggleNotifications{
+    height: fit-content;
+}
+::placeholder{
+    color: #bbbbbb;
+}

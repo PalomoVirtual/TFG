@@ -10,7 +10,7 @@ import Notificaciones from './pages/Notificaciones';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App verticalContainer">
       <NavigationBar />
       <Route path="/" component={Dashboard} />
       <Route path="/edificios" component={Edificios} />
