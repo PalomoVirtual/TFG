@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './assets/logo.png';
 import './App.css';
 import NavigationBar from './components/NavigationBar';
@@ -8,19 +8,22 @@ import Dashboard from './pages/Dashboard';
 import Edificios from './pages/Edificios';
 import Notificaciones from './pages/Notificaciones';
 
+export const EdificiosContext = React.createContext();
+
 function App() {
+  const [edificios, setEdificios] = useState([]);
+  
   return (
+    
     <div className="App verticalContainer">
-      <NavigationBar />
-      <Route path="/" component={Dashboard} />
-      <Route path="/edificios" component={Edificios} />
-      <Route path="/comparador" component={Comparador} />
-      <Route path="/notificaciones" component={Notificaciones} />
-      {/* <Route path="/tasks/new" component={NewTask} /> */}
-      {/* <Route path="/commands/new" component={NewCommand} /> */}
-      {/* <Route path="/tasks/assign/:page?">{params => <Assign page={params.page} />}</Route> */}
-      {/* <Route path="/pupil/new" component={NewPupil} /> */}
-    </div>
+        <EdificiosContext.Provider value={{edificios, setEdificios}}>
+          <NavigationBar />
+          <Route path="/" component={Dashboard} />
+          <Route path="/edificios" component={Edificios} />
+          <Route path="/comparador" component={Comparador} />
+          <Route path="/notificaciones" component={Notificaciones} />
+        </EdificiosContext.Provider>
+      </div>
   );
 }
 
