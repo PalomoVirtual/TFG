@@ -32,7 +32,7 @@ const SideBar = ({edificios}) => {
     
     return (
     <div className="verticalContainer sideBar">
-        <div className={location === '/edificios' ? 'horizontalContainer nuevoEdificio' : 'displayNone'}>
+        <div className={location === '/edificios' ? 'horizontalContainer nuevoEdificio' : 'displayNone'} onClick={() => setSelected(-1)}>
             <FontAwesomeIcon className="nuevoEdificioIcon" icon={faPlus} />
             <div>Nuevo edificio</div>
         </div>

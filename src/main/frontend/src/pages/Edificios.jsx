@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../components/SideBar";
+import EdificioFormFrame from "../components/EdificioFormFrame";
 
 export const EdificioContextEdificios = React.createContext();
 
@@ -16,11 +17,17 @@ const Edificios = () =>{
         })   
     }, []);
 
+    if (edificios === null || edificios === undefined || selected === null || selected === undefined) {
+        return <div></div>;
+    }
+    let edificio = edificios.find(i => i.id === selected);
     return(
         <EdificioContextEdificios.Provider value={{selected, setSelected}}>
             <div className="horizontalContainer mainContent">
                 {edificios && <SideBar edificios={edificios}></SideBar>}
-                <div className="panelCentral"></div>
+                <div className="panelCentral verticalContainer panelEdificios">
+                    <EdificioFormFrame selected={selected} edificioName={edificio === undefined ? "" : edificio.name} edificioAddress={edificio === undefined ? "" : edificio.address} edificioPhone={edificio === undefined ? "" : edificio.phoneNumber} edificioComment={edificio === undefined ? "" : edificio.additionalComment} ></EdificioFormFrame>
+                </div>
             </div>
         </EdificioContextEdificios.Provider>
     );

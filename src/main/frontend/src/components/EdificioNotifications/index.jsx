@@ -3,11 +3,6 @@ import './styles.css';
 import Switch from "react-switch";
 import {  } from "wouter";
 import PropTypes from 'prop-types';
-// import { EdificioContextDashboard } from '../../pages/Dashboard';
-// import { EdificioContextEdificios } from "../../pages/Edificios";
-// import { EdificioContextComparador } from "../../pages/Comparador";
-// import { EdificioContextNotificaciones } from "../../pages/Notificaciones";
-//import { EdificiosContext } from "../../App";
 
 const EdificioNotifications = ({selected, notificationValue, correo, notifications}) => {
     const [checked, setChecked] = useState(false);
@@ -20,7 +15,6 @@ const EdificioNotifications = ({selected, notificationValue, correo, notificatio
 
     function handleSubmit(){
 
-        console.log(selected + "-" + notifValue + "-" + correoValue + "-" + checked); 
         fetch('http://localhost:8080/api/building/notifications', {
             headers: {
                 Accept: "application/json",

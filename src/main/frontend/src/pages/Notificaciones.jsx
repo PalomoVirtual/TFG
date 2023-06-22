@@ -24,6 +24,9 @@ const Notificaciones = () =>{
         return <div></div>;
     }
     let edificio = edificios.find(i => i.id === selected);
+    if(edificio === undefined){
+        edificio = edificios[0];
+    }
     return(
         <EdificioContextNotificaciones.Provider value={{selected, setSelected}}>
             <div className="horizontalContainer mainContent">
