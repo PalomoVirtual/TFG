@@ -9,13 +9,31 @@ import PropTypes from 'prop-types';
 // import { EdificioContextNotificaciones } from "../../pages/Notificaciones";
 //import { EdificiosContext } from "../../App";
 
-const EdificioNotifications = ({notificationValue, correo, notifications}) => {
+const EdificioNotifications = ({selected, notificationValue, correo, notifications}) => {
     const [checked, setChecked] = useState(false);
     const [notifValue, setNotifValue] = useState(notificationValue);
     const [correoValue, setCorreoValue] = useState(correo);
 
     function handleChange(){
         setChecked(!checked);
+    }
+
+    function handleSubmit(){
+
+        console.log(selected + "-" + notifValue + "-" + correoValue + "-" + checked); 
+        fetch('http://localhost:8080/api/building/notifications', {
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json"
+            },
+            method: "PATCH",	
+            body: JSON.stringify({
+                id: selected,
+                notificationValue: notifValue,
+                notificationEmail: correoValue,
+                notifications: checked
+            })
+        });
     }
 
     useEffect(() => {
@@ -29,7 +47,7 @@ const EdificioNotifications = ({notificationValue, correo, notifications}) => {
             <div className="tituloMarco">Notificaciones de edificio</div>
             <form id="formNotifications" className="verticalContainer">
                 <div className="horizontalContainer conjuntoInputIndividual">
-                    {notificationValue && <input form="formNotifications" type="number" step={0.1} min={1} className="inputNotificaciones" placeholder="Valor máximo" value={notifValue} onChange={(e) => setNotifValue(e.target.value)}></input>}
+                    <input form="formNotifications" type="number" step={0.1} min={0} className="inputNotificaciones" placeholder="Valor máximo" value={notifValue == 0.0 ? "" : notifValue} onChange={(e) => setNotifValue(e.target.value)}></input>
                     <div className="parteDerechaInput verticalContainer">kWh</div>
                 </div>
                 <div className="horizontalContainer">
@@ -41,13 +59,14 @@ const EdificioNotifications = ({notificationValue, correo, notifications}) => {
                 <div className="toggleNotifications">
                     <Switch onChange={handleChange} height={54} width={120} handleDiameter={45} offHandleColor="#D9D9D9" onColor="#00AEF0" checkedIcon={false} uncheckedIcon={false}checked={checked} />
                 </div>
-                <input className="buttonConfirmar" type="submit" form="formNotifications" value="Confirmar"></input>
+                <input className="buttonConfirmar" type="submit" form="formNotifications" value="Confirmar" onClick={handleSubmit}></input>
             </div>
         </div>
     );
 
 };
 EdificioNotifications.propTypes = {
+    selected: PropTypes.number,
     notificationValue: PropTypes.number,
     correo: PropTypes.string,
     notifications: PropTypes.bool

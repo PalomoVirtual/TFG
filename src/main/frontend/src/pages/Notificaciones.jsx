@@ -20,20 +20,16 @@ const Notificaciones = () =>{
         })   
     }, []);
 
-    if (edificios === null || edificios === undefined || selected === null) {
-        return <div>Cargando...</div>;
+    if (edificios === null || edificios === undefined || selected === null || selected === undefined) {
+        return <div></div>;
     }
-    // console.log(edificios);
-    // console.log(selected);
     let edificio = edificios.find(i => i.id === selected);
-    // console.log(edificio);
-    // console.log(edificio.notifications);
     return(
         <EdificioContextNotificaciones.Provider value={{selected, setSelected}}>
             <div className="horizontalContainer mainContent">
                 {edificios && <SideBar edificios={edificios}></SideBar>}
                 <div className="panelCentral verticalContainer panelNotificaciones">
-                    <EdificioNotifications notificationValue={edificio.notificationValue} correo={edificio.notificationEmail} notifications={edificio.notifications}></EdificioNotifications>
+                    <EdificioNotifications selected={selected} notificationValue={edificio.notificationValue} correo={edificio.notificationEmail} notifications={edificio.notifications}></EdificioNotifications>
                 </div>
             </div>
         </EdificioContextNotificaciones.Provider>
