@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
 import SideBar from "../components/SideBar";
+import ConsumoActual from "../components/ConsumoActual";
+// import TablaHistorico from "../components/TablaHistorico";
+import VirtualizedTable from "../components/pruebaTablaVirtual";
 
 export const EdificioContextDashboard = React.createContext();
 
@@ -17,14 +20,21 @@ const Dashboard = () =>{
     }, []);
 
     return(
+        <EdificioContextDashboard.Provider value={{selected, setSelected}}>
             <div className="horizontalContainer mainContent">
-                <EdificioContextDashboard.Provider value={{selected, setSelected}}>
-                    {edificios && <SideBar edificios={edificios}></SideBar>}
-                    <div className="panelCentral">
-                        
+                {edificios && <SideBar edificios={edificios}></SideBar>}
+                <div className="panelCentral horizontalContainer">
+                    <div className="verticalContainer columnaIzquierdaDashboard">
+                        <ConsumoActual consumoActual={120.5} consumoAnterior={130}></ConsumoActual>
+                        {/* <TablaHistorico></TablaHistorico> */}
+                        <VirtualizedTable></VirtualizedTable>
                     </div>
-                </EdificioContextDashboard.Provider>
+                    <div className="verticalContainer">
+
+                    </div>
+                </div>
             </div>
+        </EdificioContextDashboard.Provider>
     );
 };
 

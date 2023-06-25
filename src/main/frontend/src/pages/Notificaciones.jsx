@@ -7,7 +7,6 @@ export const EdificioContextNotificaciones = React.createContext();
 const Notificaciones = () =>{
     const [edificios, setEdificios] = useState(null);
     const [selected, setSelected] = useState(null);
-    // const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         fetch('http://localhost:8080/api/building').then(res => {
@@ -15,8 +14,6 @@ const Notificaciones = () =>{
         }).then((data) => {
             setSelected(data[0].id);
             setEdificios(data);
-            // setIsLoading(false);
-            // console.log(data[0].name);
         })   
     }, []);
 

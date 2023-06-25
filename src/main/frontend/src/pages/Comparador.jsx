@@ -12,6 +12,7 @@ const Comparador = () =>{
             return res.json();
         }).then((data) => {
             setEdificios(data);
+            setSelected(data[0].id);
         })   
     }, []);
 
