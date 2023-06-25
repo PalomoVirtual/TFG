@@ -1,0 +1,65 @@
+.marcoTablaConsumo{
+    flex-grow: 1;
+    background-color: #008080;
+    border-radius: 20px;
+    font-family: "Montserrat";
+    font-size: 24px;
+    color: #ffffff;
+    padding-top: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 60px;
+    /* margin-bottom: 20px; */
+}
+
+.tituloTablaConsumo{
+    margin-bottom: 30px;
+}
+
+.filaTablaConsumo{
+    font-size: 20px;
+    white-space: nowrap;
+    justify-content: space-between;
+}
+
+.fechaConsumo{
+    width: 75%;
+    text-align: start;
+}
+
+.valorConsumo{
+    flex: 1;
+    text-align: center;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+
+.listaConsumo::-webkit-scrollbar {
+    width: 20px;
+}
+
+.listaConsumo::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+.listaConsumo::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.listaConsumo::-webkit-scrollbar-thumb:hover {
+    background: #00AEF0; 
+}
+
+.valorConsumoIncrementado {
+    color: #DF5D5D;
+    /* Añade aquí los estilos para cuando el consumo incrementa */
+}
+
+.valorConsumoDecrementado {
+    color: #37C320;
+    /* Añade aquí los estilos para cuando el consumo decrementa */
+}

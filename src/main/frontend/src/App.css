@@ -88,6 +88,7 @@ html, body{
 }
 
 .columnaIzquierdaDashboard{
+  width: 400px;
   margin-right: 10px;
   margin-left: 20px;
   margin-top: 20px;

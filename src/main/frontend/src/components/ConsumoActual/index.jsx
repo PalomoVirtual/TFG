@@ -1,41 +1,61 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import './styles.css';
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSortDown, faSortUp } from "@fortawesome/free-solid-svg-icons";
 
-const ConsumoActual = ({consumoActual, consumoAnterior}) =>{
+const ConsumoActual = ({selected}) =>{
+    const [consumoActualAnterior, setConsumoActualAnterior] = useState([]);
+    const [claseLogo, setClaseLogo] = useState("");
+    const [claseConsumo, setClaseConsumo] = useState("");
+    const [dif, setDif] = useState(0);
+    
+    useEffect(() => {
+        fetch('http://localhost:8080/api/history/' + selected.toString() + "/current")
+        .then(response => response.json())
+        .then(data => {
+            setConsumoActualAnterior(data);
+            console.log(selected);
+            if(data[1] != -1){
+                let diferencia = data[0] - data[1];
+                setDif(diferencia);
+                if(diferencia == 0){
+                    setClaseLogo("displayNone");
+                }
+                else{
+                    let clase;
+                    if(diferencia > 0){
+                        clase = "incremento";
+                        setClaseLogo(clase);
+                    }
+                    else{
+                        clase = "decremento";
+                        setClaseLogo(clase);
+                    }
+                    setClaseConsumo(clase);
+                }
+            }
+            else{
+                setClaseLogo("displayNone");
+                setClaseConsumo("")
+            }
+            
+          });
+        }, [selected]);
 
-
-    let diferencia = consumoActual - consumoAnterior;
-    let claseLogo;
-    let claseConsumo = "";
-    if(diferencia == 0){
-        claseLogo = "displayNone";
-    }
-    else{
-        if(diferencia > 0){
-            claseLogo = "incremento";
-        }
-        else{
-            claseLogo = "decremento";
-        }
-        claseConsumo = claseLogo
-    }
     return(
         <div className="marcoConsumoActual verticalContainer">
             <div>Consumo actual (kWh)</div>
-            <div className="horizontalContainer horizontalCenter consumoBloque">
-                <div className={"consumoActual " + claseConsumo}>{consumoActual}</div>
-                <div className={claseLogo}>{ diferencia > 0 ? <FontAwesomeIcon icon={faSortUp}></FontAwesomeIcon> : <FontAwesomeIcon icon={faSortDown}></FontAwesomeIcon>} </div>
-            </div>
+            {consumoActualAnterior.length > 0 && <div className="horizontalContainer horizontalCenter consumoBloque">
+                {consumoActualAnterior[0] != -1 && <div className={"consumoActual " + claseConsumo}>{consumoActualAnterior[0]}</div>}
+                {dif != 0 && claseLogo != "" && <div className={claseLogo}>{ dif > 0 ? <FontAwesomeIcon className="icono" icon={faSortUp}></FontAwesomeIcon> : <FontAwesomeIcon className="icono" icon={faSortDown}></FontAwesomeIcon>} </div>}
+            </div>}
         </div>
     );
 };
 
 ConsumoActual.propTypes = {
-    consumoActual: PropTypes.number,
-    consumoAnterior: PropTypes.number,
+    selected: PropTypes.number
 };
 
 export default ConsumoActual;

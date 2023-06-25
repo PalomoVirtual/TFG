@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import SideBar from "../components/SideBar";
 import ConsumoActual from "../components/ConsumoActual";
 // import TablaHistorico from "../components/TablaHistorico";
-import VirtualizedTable from "../components/pruebaTablaVirtual";
+import TablaConsumo from "../components/TablaConsumo";
 
 export const EdificioContextDashboard = React.createContext();
 
@@ -25,9 +25,9 @@ const Dashboard = () =>{
                 {edificios && <SideBar edificios={edificios}></SideBar>}
                 <div className="panelCentral horizontalContainer">
                     <div className="verticalContainer columnaIzquierdaDashboard">
-                        <ConsumoActual consumoActual={120.5} consumoAnterior={130}></ConsumoActual>
+                        {selected && <ConsumoActual selected={selected}></ConsumoActual>}
                         {/* <TablaHistorico></TablaHistorico> */}
-                        <VirtualizedTable></VirtualizedTable>
+                        {selected && <TablaConsumo selected={selected}></TablaConsumo>}
                     </div>
                     <div className="verticalContainer">
 
