@@ -28,4 +28,19 @@ public class BuildingController {
     BuildingDTO addBuilding(@RequestBody BuildingDTO building){
         return buildingService.addBuilding(building);
     }
+
+    @PatchMapping("/building/notifications")
+    void updateBuildingNotifications(@RequestBody BuildingDTO building){
+        buildingService.updateBuildingNotifications(building);
+    }
+
+    @PatchMapping("/building")
+    void updateBuildingRegularData(@RequestBody BuildingDTO building){
+        buildingService.updateBuildingRegularData(building);
+    }
+
+    @DeleteMapping("/building/{id}")
+    void deleteBuilding(@PathVariable Long id){
+        buildingService.deleteBuilding(id);
+    }
 }

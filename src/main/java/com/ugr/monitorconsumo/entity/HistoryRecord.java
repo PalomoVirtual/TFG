@@ -9,11 +9,14 @@ import java.util.Objects;
 @Table
 public class HistoryRecord {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(columnDefinition = "INT AUTO_INCREMENT")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private Timestamp date;
 
+    @Column(nullable = false)
     private double value;
 
     @ManyToOne()

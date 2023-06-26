@@ -1,21 +1,18 @@
 package com.ugr.monitorconsumo.dto;
 
-import com.ugr.monitorconsumo.entity.Building;
-import jakarta.persistence.*;
-
 import java.sql.Timestamp;
 import java.util.Objects;
 
-public class HistoryRecordDTO {
+public class HistoryRecordOutDTO {
     private Long id;
 
-    private Timestamp date;
+    private String date;
 
     private double value;
 
     private Long buildingId;
 
-    public HistoryRecordDTO() {
+    public HistoryRecordOutDTO() {
 
     }
 
@@ -27,11 +24,11 @@ public class HistoryRecordDTO {
         this.id = id;
     }
 
-    public Timestamp getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -55,7 +52,7 @@ public class HistoryRecordDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        HistoryRecordDTO that = (HistoryRecordDTO) o;
+        HistoryRecordOutDTO that = (HistoryRecordOutDTO) o;
         return Objects.equals(getId(), that.getId());
     }
 
