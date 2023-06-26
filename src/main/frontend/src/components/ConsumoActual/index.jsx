@@ -15,7 +15,6 @@ const ConsumoActual = ({selected}) =>{
         .then(response => response.json())
         .then(data => {
             setConsumoActualAnterior(data);
-            console.log(selected);
             if(data[1] != -1){
                 let diferencia = data[0] - data[1];
                 setDif(diferencia);
