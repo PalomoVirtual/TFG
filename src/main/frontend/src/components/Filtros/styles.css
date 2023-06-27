@@ -27,6 +27,10 @@
 }
 
 .iconContainer:hover{
+    color: #898989;
+}
+
+.iconContainer:hover{
     cursor: pointer;
 }
 

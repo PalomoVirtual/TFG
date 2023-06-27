@@ -6,7 +6,7 @@ import GraficoConsumo from "../components/GraficoConsumo";
 import Filtros from "../components/Filtros";
 import SockJS from 'sockjs-client';
 import { Stomp } from '@stomp/stompjs';
-import { parse } from "date-fns";
+import { format, parse } from "date-fns";
 
 export const EdificioContextDashboard = React.createContext();
 
@@ -69,31 +69,38 @@ const Dashboard = () =>{
                 });
             }
             else{
-                setRows([]);
-                // if(fechaRange == null){
-                    // if(consumoRange[0] == 0){
+                let paramFetch = "?";
+                if(fechaRange != null){
+                    let fechaInicial = format(fechaRange[0], "yyyy-MM-dd'T'HH:mm:ss");
+                    let fechaFinal = format(fechaRange[1], "yyyy-MM-dd'T'HH:mm:ss");
+                    paramFetch += "fechaInicial=" + fechaInicial + "&fechaFinal=" + fechaFinal; 
+                }
+                if(consumoRange[0] != 0){
+                    if(paramFetch != "?"){
+                        paramFetch += "&";
+                    }
+                    paramFetch += "consumoInicial=" + consumoRange[0].toString();
+                }
+                if(consumoRange[1] != 0){
+                    if(paramFetch != "?"){
+                        paramFetch += "&";
+                    }
+                    paramFetch += "consumoFinal=" + consumoRange[1].toString();
+                }
 
-                    // }else if(consumoRange[1] == 1000){
+                
+                fetch('http://localhost:8080/api/history/' + selected.toString() + "/from" + paramFetch)
+                .then(response => response.json())
+                .then(data => {
+                if (!signal.aborted) {
+                    console.log("estamos dentro -----  " + paramFetch);
+                    console.log(data);
 
-                    // }
-                    // else{
 
-                    // }
-                // }
-                // else if(consumoRange[0] == 0 && consumoRange[1] == 1000){
-
-                // }
-                // else{
-
-                // }
-                // // fetch('http://localhost:8080/api/history/' + selected.toString())
-                // // .then(response => response.json())
-                // // .then(data => {
-                // // if (!signal.aborted) {
-                // //     setRows(data.concat(buffer));
-                // // }
-                // // setFetching(false);
-                // // });
+                    setRows(data.concat(buffer));
+                }
+                setFetching(false);
+                });
             }
 
             return () => {

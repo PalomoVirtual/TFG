@@ -32,8 +32,8 @@ public class HistoryController {
     @GetMapping("/history/{buildingId}/from")
     List<HistoryRecordOutDTO> getHistoryOfBuildingFiltered(@PathVariable Long buildingId, @RequestParam(value="fechaInicial", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicial,
                                                            @RequestParam(value="fechaFinal", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFinal,
-                                                           @RequestParam(value="consumoInicial", required = false) double consumoInicial,
-                                                           @RequestParam(value="consumoFinal", required = false) double consumoFinal){
+                                                           @RequestParam(value="consumoInicial", required = false) Double consumoInicial,
+                                                           @RequestParam(value="consumoFinal", required = false) Double consumoFinal){
 
         Timestamp fechaInicialFiltered = null;
         Timestamp fechaFinalFiltered = null;

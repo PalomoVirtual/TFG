@@ -78,8 +78,32 @@ public class HistoryService {
         return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findAllByBuildingIdOrderByDateAsc(buildingId));
     }
 
-    public List<HistoryRecordOutDTO> getHistoryOfBuildingFiltered(Long buildingId, ,){
-        return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndDateAfterOrderByDateAsc(buildingId, fechaMinimaSinIncluir));
+    public List<HistoryRecordOutDTO> getHistoryOfBuildingFiltered(Long buildingId, Timestamp fechaInicial, Timestamp fechaFinal, Double consumoInicial, Double consumoFinal ){
+        if(consumoInicial == null && consumoFinal == null){
+            return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndDateBetweenOrderByDateAsc(buildingId, fechaInicial, fechaFinal));
+        }
+        else if(fechaInicial == null && fechaFinal == null){
+            if(consumoInicial == null){
+                return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndValueLessThanEqualOrderByDateAsc(buildingId, consumoFinal));
+            }
+            else if(consumoFinal == null){
+                return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndValueGreaterThanEqualOrderByDateAsc(buildingId,consumoInicial));
+            }
+            else{
+                return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndValueBetweenOrderByDateAsc(buildingId, consumoInicial, consumoFinal));
+            }
+        }
+        else{
+            if(consumoInicial == null){
+                return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndDateBetweenAndValueLessThanEqualOrderByDateAsc(buildingId, fechaInicial, fechaFinal, consumoFinal));
+            }
+            else if(consumoFinal == null){
+                return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndDateBetweenAndValueGreaterThanEqualOrderByDateAsc(buildingId, fechaInicial, fechaFinal, consumoInicial));
+            }
+            else{
+                return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndDateBetweenAndValueBetweenOrderByDateAsc(buildingId, fechaInicial, fechaFinal, consumoInicial, consumoFinal));
+            }
+        }
     }
 
     public List<Double> getCurrentOfBuilding(Long buildingId){
