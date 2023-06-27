@@ -78,7 +78,7 @@ public class HistoryService {
         return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findAllByBuildingIdOrderByDateAsc(buildingId));
     }
 
-    public List<HistoryRecordOutDTO> getHistoryOfBuildingFromDate(Long buildingId, Timestamp fechaMinimaSinIncluir){
+    public List<HistoryRecordOutDTO> getHistoryOfBuildingFiltered(Long buildingId, ,){
         return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndDateAfterOrderByDateAsc(buildingId, fechaMinimaSinIncluir));
     }
 

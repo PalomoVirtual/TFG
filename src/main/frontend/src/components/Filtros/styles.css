@@ -1,0 +1,52 @@
+.marcoFiltros{
+    background-color: #008080;
+    border-radius: 20px;
+    font-family: "Montserrat";
+    font-size: 24px;
+    color: #ffffff;
+    padding-top: 15px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 30px;
+}
+
+.mainContainerFiltro{
+    justify-content: space-around;
+}
+
+.rangeTitle{
+    margin-bottom: 40px;
+}
+
+.iconContainer{
+    margin-top: 50px;
+    height: 40px;
+    color: #ABABAB;
+    padding-left: 40px;
+    padding-right: 40px;
+}
+
+.iconContainer:hover{
+    cursor: pointer;
+}
+
+.rangeContainer{
+    flex-grow: 1;
+    flex-basis: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+
+}
+
+.intervaloConsumoBox{
+    border-radius: 13px;
+    background: #323232;
+    text-align: center;
+    border-style: none;
+    width: 100px;
+}
+
+.containerConsumoBoxes{
+    justify-content: space-around;
+    margin-top: 20px;
+}

@@ -30,8 +30,21 @@ public class HistoryController {
     }
 
     @GetMapping("/history/{buildingId}/from")
-    List<HistoryRecordOutDTO> getHistoryOfBuildingFromDate(@PathVariable Long buildingId, @RequestParam("fechaMinimaSinIncluir") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaMinimaSinIncluir){
-        return historyService.getHistoryOfBuildingFromDate(buildingId, Timestamp.valueOf(fechaMinimaSinIncluir));
+    List<HistoryRecordOutDTO> getHistoryOfBuildingFiltered(@PathVariable Long buildingId, @RequestParam(value="fechaInicial", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaInicial,
+                                                           @RequestParam(value="fechaFinal", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fechaFinal,
+                                                           @RequestParam(value="consumoInicial", required = false) double consumoInicial,
+                                                           @RequestParam(value="consumoFinal", required = false) double consumoFinal){
+
+        Timestamp fechaInicialFiltered = null;
+        Timestamp fechaFinalFiltered = null;
+        if(fechaInicial != null){
+            fechaInicialFiltered = Timestamp.valueOf(fechaInicial);
+        }
+        if(fechaFinal != null){
+            fechaFinalFiltered = Timestamp.valueOf(fechaFinal);
+        }
+
+        return historyService.getHistoryOfBuildingFiltered(buildingId, fechaInicialFiltered, fechaFinalFiltered, consumoInicial, consumoFinal);
     }
 
     @GetMapping("/history/{buildingId}/current")

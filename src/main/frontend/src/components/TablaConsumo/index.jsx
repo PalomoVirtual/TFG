@@ -1,63 +1,17 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';
 import { List, AutoSizer } from 'react-virtualized';
 import PropTypes from 'prop-types';
 import './styles.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
-import SockJS from 'sockjs-client';
-import { Stomp } from '@stomp/stompjs';
 
-const TablaConsumo = ({selected}) => {
-  const [rows, setRows] = useState([]);
+const TablaConsumo = ({rows}) => {
   const [scrollPosition, setScrollPosition] = useState(0);
-  const [fetching, setFetching] = useState(false);
-  const [buffer, setBuffer] = useState([]);
   const listRef = useRef();
 
   const handleScroll = ({ scrollTop }) => {
     setScrollPosition(scrollTop);
   };
-
-  useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
-    const socket = new SockJS('http://localhost:8080/gs-guide-websocket');
-    const stompClient = Stomp.over(socket);
-    
-    setBuffer([]);
-    setFetching(true);
-    stompClient.connect({}, (frame) => {
-      console.log('Connected: ' + frame);
-      stompClient.subscribe('/topic/update', (message) => {
-        const receivedMessage = JSON.parse(message.body);
-        console.log(receivedMessage);
-        const receivedBuildingId = receivedMessage.buildingId;
-        if (receivedBuildingId === selected) {
-          if (fetching) {
-            setBuffer(buffer => [...buffer, receivedMessage]);
-          } else {
-            setRows(rows => [...rows, receivedMessage]);
-          }
-        }
-      });
-    });
-    
-    fetch('http://localhost:8080/api/history/' + selected.toString())
-    .then(response => response.json())
-    .then(data => {
-      if (!signal.aborted) {
-        setRows(data.concat(buffer));
-      }
-      setFetching(false);
-    });
-
-    return () => {
-      if (stompClient) {
-        stompClient.disconnect();
-      }
-      controller.abort();
-    };
-  }, [selected]);
 
   const rowRenderer = ({ index, key, style }) => {
     let consumoClase = '';
@@ -104,7 +58,7 @@ const TablaConsumo = ({selected}) => {
 };
 
 TablaConsumo.propTypes = {
-  selected: PropTypes.number
+  rows: PropTypes.array
 };
 
 export default TablaConsumo;
