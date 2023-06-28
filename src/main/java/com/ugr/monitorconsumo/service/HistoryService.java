@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class HistoryService {
@@ -60,21 +61,23 @@ public class HistoryService {
             edificioAsociado.setLastAbsoluteValue(historyRecordDTO.getValue());
             buildingService.updateBuilding(edificioAsociado);
 
-            try{
-                if(edificioAsociado.isNotifications() && consumo >= edificioAsociado.getNotificationValue() && edificioAsociado.getNotificationEmail() != ""){
-                    Message message = new MimeMessage(emailSession);
-                    message.setFrom(new InternetAddress("p69577875@gmail.com", "Powerglimpse"));
-                    message.setRecipient(Message.RecipientType.TO, new InternetAddress(edificioAsociado.getNotificationEmail()));
-                    message.setSubject("Consumo máximo configurado alcanzado");
-                    message.setText("Le informamos de que el consumo establecido como máximo (" +
-                            edificioAsociado.getNotificationValue() + " kWh) para el edificio " +
-                            edificioAsociado.getName() + " ha sido alcanzado, con un valor de " + consumo + " kWh. Este suceso ha tenido lugar en la fecha " + ajusteZona.toString());
+            CompletableFuture.runAsync(() -> {
+                try{
+                    if(edificioAsociado.isNotifications() && consumo >= edificioAsociado.getNotificationValue() && edificioAsociado.getNotificationEmail() != ""){
+                        Message message = new MimeMessage(emailSession);
+                        message.setFrom(new InternetAddress("p69577875@gmail.com", "Powerglimpse"));
+                        message.setRecipient(Message.RecipientType.TO, new InternetAddress(edificioAsociado.getNotificationEmail()));
+                        message.setSubject("Consumo máximo configurado alcanzado");
+                        message.setText("Le informamos de que el consumo establecido como máximo (" +
+                                edificioAsociado.getNotificationValue() + " kWh) para el edificio " +
+                                edificioAsociado.getName() + " ha sido alcanzado, con un valor de " + consumo + " kWh. Este suceso ha tenido lugar en la fecha " + ajusteZona.toString());
 
-                    Transport.send(message);
+                        Transport.send(message);
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
                 }
-            } catch (Exception e){
-                e.printStackTrace();
-            }
+            });
 
             this.socketTemplate.convertAndSend("/topic/update", historyRecordMapper.historyRecordToHistoryRecordOutDTO(nuevoRecord));
 
@@ -86,9 +89,7 @@ public class HistoryService {
             return new HistoryRecordDTO();
         }
 
-//        HistoryRecord historyRecord = historyRepository.getReferenceById(historyRecordDTO.getId());
-//        historyRecord.setBuilding(buildingMapper.buildingDTOToBuilding(buildingService.getBuilding(historyRecordDTO.getBuildingId())));
-//        return historyRecordMapper.historyRecordToHistoryRecordDTO(historyRepository.save(historyRecord));
+//
     }
 
     public void deleteById(Long id){
