@@ -12,6 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,22 +39,42 @@ public class HistoryService {
     @Autowired
     SimpMessagingTemplate socketTemplate;
 
+    @Autowired
+    Session emailSession;
+
     public HistoryRecordDTO addHistoryRecord(HistoryRecordDTO historyRecordDTO){
         Building edificioAsociado = buildingMapper.buildingDTOToBuilding(buildingService.getBuilding(historyRecordDTO.getBuildingId()));
         if(edificioAsociado.getLastAbsoluteValue() != -1){
             double consumo = historyRecordDTO.getValue() - edificioAsociado.getLastAbsoluteValue();
+
             HistoryRecord nuevoRecord = historyRecordMapper.historyRecordDTOToHistoryRecord(historyRecordDTO);
             nuevoRecord.setBuilding(edificioAsociado);
             nuevoRecord.setValue(consumo);
             long time = nuevoRecord.getDate().getTime();
             time = Math.round(time / 1000.0) * 1000;
             time = time - 1000*3600*2;
-            long roundedTime = Math.round(time / 1000.0) * 1000; // Redondear al segundo más cercano
+            long roundedTime = Math.round(time / 1000.0) * 1000;
             Timestamp ajusteZona = new Timestamp(roundedTime);
             nuevoRecord.setDate(ajusteZona);
             nuevoRecord = historyRepository.save(nuevoRecord);
             edificioAsociado.setLastAbsoluteValue(historyRecordDTO.getValue());
             buildingService.updateBuilding(edificioAsociado);
+
+            try{
+                if(edificioAsociado.isNotifications() && consumo >= edificioAsociado.getNotificationValue() && edificioAsociado.getNotificationEmail() != ""){
+                    Message message = new MimeMessage(emailSession);
+                    message.setFrom(new InternetAddress("p69577875@gmail.com", "Powerglimpse"));
+                    message.setRecipient(Message.RecipientType.TO, new InternetAddress(edificioAsociado.getNotificationEmail()));
+                    message.setSubject("Consumo máximo configurado alcanzado");
+                    message.setText("Le informamos de que el consumo establecido como máximo (" +
+                            edificioAsociado.getNotificationValue() + " kWh) para el edificio " +
+                            edificioAsociado.getName() + " ha sido alcanzado, con un valor de " + consumo + " kWh. Este suceso ha tenido lugar en la fecha " + ajusteZona.toString());
+
+                    Transport.send(message);
+                }
+            } catch (Exception e){
+                e.printStackTrace();
+            }
 
             this.socketTemplate.convertAndSend("/topic/update", historyRecordMapper.historyRecordToHistoryRecordOutDTO(nuevoRecord));
 

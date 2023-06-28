@@ -122,7 +122,7 @@ const Dashboard = () =>{
                         {selected && <TablaConsumo rows={rows}></TablaConsumo>}
                     </div>
                     <div className="verticalContainer columnaDerechaDashboard">
-                        {selected && <GraficoConsumo selected={selected}></GraficoConsumo>}
+                        {selected && <GraficoConsumo rows={rows}></GraficoConsumo>}
                         <Filtros setFechaRange={setFechaRange} setConsumoRange={setConsumoRange} consumoRange={consumoRange} fechaRange={fechaRange}></Filtros>
                     </div>
                 </div>

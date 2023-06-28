@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BuildingRepository extends JpaRepository<Building, Long> {
+
     @Transactional
     @Modifying
     @Query("UPDATE Building e SET e.notificationValue = :notificationValue, e.notificationEmail = :notificationEmail, e.notifications = :notifications WHERE e.id = :id")
