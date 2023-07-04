@@ -56,4 +56,9 @@ public class HistoryController {
     HistoryRecordDTO addHistoryRecord(@RequestBody HistoryRecordDTO historyRecord){
         return historyService.addHistoryRecord(historyRecord);
     }
+
+    @GetMapping("/history/{buildingId}/minMax")
+    List<Double> getMinMaxOfBuilding(@PathVariable Long buildingId){
+        return historyService.getMinMaxOfBuilding(buildingId);
+    }
 }

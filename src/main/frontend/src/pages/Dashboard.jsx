@@ -14,7 +14,8 @@ const Dashboard = () =>{
     const [edificios, setEdificios] = useState(null);
     const [selected, setSelected] = useState(null);
     const [fechaRange, setFechaRange] = useState(null);
-    const [consumoRange, setConsumoRange] = useState([0, 1000]);
+    const [consumoRange, setConsumoRange] = useState([-1, -1]);
+    const [consumoMinMax, setConsumoMinMax] = useState([-1, -1]);
     const [fetching, setFetching] = useState(false);
     const [buffer, setBuffer] = useState([]);
     const [rows, setRows] = useState([]);
@@ -27,6 +28,18 @@ const Dashboard = () =>{
             setSelected(data[0].id);
         });   
     }, []);
+
+    useEffect(() => {
+        if(selected){
+            fetch('http://localhost:8080/api/history/' + selected.toString() + "/minMax")
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                        setConsumoMinMax([data[0], data[1]]);
+                    });
+        }
+        setConsumoRange([-1, -1]);
+    }, [selected]);
 
     useEffect(() => {
         if(selected){
@@ -58,13 +71,13 @@ const Dashboard = () =>{
                 });
             });
             
-            if(fechaRange == null && consumoRange[0] == 0 && consumoRange[1] == 1000){
+            if(fechaRange == null && consumoRange[0] == -1 && consumoRange[1] == -1){
                 fetch('http://localhost:8080/api/history/' + selected.toString())
                 .then(response => response.json())
                 .then(data => {
-                if (!signal.aborted) {
-                    setRows(data.concat(buffer));
-                }
+                    if (!signal.aborted) {
+                        setRows(data.concat(buffer));
+                    }
                 setFetching(false);
                 });
             }
@@ -75,13 +88,13 @@ const Dashboard = () =>{
                     let fechaFinal = format(fechaRange[1], "yyyy-MM-dd'T'HH:mm:ss");
                     paramFetch += "fechaInicial=" + fechaInicial + "&fechaFinal=" + fechaFinal; 
                 }
-                if(consumoRange[0] != 0){
+                if(consumoRange[0] != -1){
                     if(paramFetch != "?"){
                         paramFetch += "&";
                     }
                     paramFetch += "consumoInicial=" + consumoRange[0].toString();
                 }
-                if(consumoRange[1] != 0){
+                if(consumoRange[1] != -1){
                     if(paramFetch != "?"){
                         paramFetch += "&";
                     }
@@ -123,7 +136,7 @@ const Dashboard = () =>{
                     </div>
                     <div className="verticalContainer columnaDerechaDashboard">
                         {selected && <GraficoConsumo rows={rows}></GraficoConsumo>}
-                        <Filtros setFechaRange={setFechaRange} setConsumoRange={setConsumoRange} consumoRange={consumoRange} fechaRange={fechaRange}></Filtros>
+                        {consumoMinMax[0] != -1 && consumoMinMax[1] != -1 && <Filtros consumoMinMax={consumoMinMax} setFechaRange={setFechaRange} setConsumoRange={setConsumoRange} consumoRange={consumoRange} fechaRange={fechaRange}></Filtros>}
                     </div>
                 </div>
             </div>

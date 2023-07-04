@@ -38,7 +38,7 @@ const TablaConsumo = ({rows}) => {
   return (
     <div className='marcoTablaConsumo verticalContainer'>
       <div className='tituloTablaConsumo'>Tabla de consumo (kWh)</div>
-      <AutoSizer>
+      {rows.length > 0 ? <AutoSizer>
         {({height, width }) => (
           <List
             className='listaConsumo'
@@ -52,7 +52,7 @@ const TablaConsumo = ({rows}) => {
             rowRenderer={rowRenderer}
           />
         )}
-      </AutoSizer>
+      </AutoSizer> : "Vacío"}
     </div>
   );
 };

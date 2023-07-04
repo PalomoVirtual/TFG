@@ -145,4 +145,11 @@ public class HistoryService {
         }
         return top2Values;
     }
+
+    public List<Double> getMinMaxOfBuilding(Long buildingId){
+        List<Double> values = new ArrayList<Double>();
+        values.add(historyRepository.findMinByBuildingId(buildingId));
+        values.add(historyRepository.findMaxByBuildingId(buildingId));
+        return values;
+    }
 }

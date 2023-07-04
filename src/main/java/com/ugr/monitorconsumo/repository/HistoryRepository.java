@@ -31,4 +31,10 @@ public interface HistoryRepository extends JpaRepository<HistoryRecord, Long> {
 
     @Query(value = "SELECT * FROM HISTORY_RECORD h WHERE h.building_id = :buildingId ORDER BY h.date DESC LIMIT 2", nativeQuery = true)
     List<HistoryRecord> findTop2ByBuildingIdOrderByDateDesc(@Param("buildingId") Long buildingId);
+
+    @Query(value = "SELECT MIN(h.value) FROM HISTORY_RECORD h WHERE h.building_id = :buildingId", nativeQuery = true)
+    Double findMinByBuildingId(@Param("buildingId") Long buildingId);
+
+    @Query(value = "SELECT MAX(h.value) FROM HISTORY_RECORD h WHERE h.building_id = :buildingId", nativeQuery = true)
+    Double findMaxByBuildingId(@Param("buildingId") Long buildingId);
 }

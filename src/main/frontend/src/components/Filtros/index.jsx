@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./styles.css";
 import PropTypes from 'prop-types';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,14 +6,19 @@ import { faFilterCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { DateRangePicker, RangeSlider } from "rsuite";
 import 'rsuite/dist/rsuite-no-reset.min.css';
 
-const Filtros = ({setFechaRange, setConsumoRange, consumoRange, fechaRange}) => {
-    const [consumoRangeSliding, setConsumoRangeSliding] = useState(consumoRange);
+const Filtros = ({setFechaRange, setConsumoRange, consumoRange, fechaRange, consumoMinMax}) => {
+    const [consumoRangeSliding, setConsumoRangeSliding] = useState(consumoMinMax);
     const [fechaRangeChanging, setFechaRangeChanging] = useState(fechaRange);
+
+
+    useEffect(() => {
+        setConsumoRangeSliding(consumoMinMax);
+    }, [consumoMinMax]);
 
     function clearFilters(){
         setFechaRange(null);
-        setConsumoRange([0, 1000]);
-        setConsumoRangeSliding([0, 1000]);
+        setConsumoRange([-1, -1]);
+        setConsumoRangeSliding([consumoMinMax[0], consumoMinMax[1]]);
         setFechaRangeChanging(null);
     }
     
@@ -22,7 +27,26 @@ const Filtros = ({setFechaRange, setConsumoRange, consumoRange, fechaRange}) => 
         setFechaRangeChanging(value);
     }
 
+    console.log(consumoMinMax);
+    console.log("HOLA");
 
+    const defaultSlider = [0, 1000];
+
+    if(consumoRange[0] == -1){
+        defaultSlider[0] = consumoMinMax[0];
+    }
+    else{
+        defaultSlider[0] = consumoRange[0];
+    }
+
+    if(consumoRange[1] == -1){
+        defaultSlider[1] = consumoMinMax[1];
+    }
+    else{
+        defaultSlider[1] = consumoRange[1];
+    }
+
+    console.log(defaultSlider);
     return(
         <div className="verticalContainer marcoFiltros">
             <div>Filtros</div>
@@ -37,10 +61,10 @@ const Filtros = ({setFechaRange, setConsumoRange, consumoRange, fechaRange}) => 
                 </div>
                 <div className="verticalContainer rangeContainer">
                     <div className="rangeTitle">Intervalo de consumo (kWh)</div>
-                    <RangeSlider defaultValue={consumoRange} value={consumoRangeSliding} progress={true} min={0} max={1000} onChange={(value) => {setConsumoRangeSliding(value)}} onChangeCommitted={(value => {setConsumoRange(value)})}></RangeSlider>
+                    <RangeSlider defaultValue={defaultSlider} value={consumoRangeSliding} progress={true} min={consumoMinMax[0]} max={consumoMinMax[1]} onChange={(value) => {setConsumoRangeSliding(value)}} onChangeCommitted={(value => {setConsumoRange(value)})}></RangeSlider>
                     <div className="horizontalContainer containerConsumoBoxes">
-                        <div className="intervaloConsumoBox">{consumoRange[0].toString()}</div>
-                        <div className="intervaloConsumoBox">{consumoRange[1].toString()}</div>
+                        <div className="intervaloConsumoBox">{consumoRangeSliding[0].toString()}</div>
+                        <div className="intervaloConsumoBox">{consumoRangeSliding[1].toString()}</div>
                     </div>
                 </div>
             </div>
@@ -53,6 +77,7 @@ Filtros.propTypes = {
     setConsumoRange: PropTypes.func,
     consumoRange: PropTypes.array,
     fechaRange: PropTypes.array,
+    consumoMinMax: PropTypes.array
 };
 
 export default Filtros;
