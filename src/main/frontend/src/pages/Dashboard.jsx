@@ -35,7 +35,12 @@ const Dashboard = () =>{
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
-                        setConsumoMinMax([data[0], data[1]]);
+                        if(data[0] != null){
+                            setConsumoMinMax([data[0], data[1]]);
+                        }
+                        else{
+                            setConsumoMinMax([0, 0]);
+                        }
                     });
         }
         setConsumoRange([-1, -1]);
