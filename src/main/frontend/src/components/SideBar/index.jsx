@@ -7,7 +7,6 @@ import EdificioSideBar from "../EdificioSideBar";
 import PropTypes from 'prop-types';
 import { EdificioContextDashboard } from '../../pages/Dashboard';
 import { EdificioContextEdificios } from "../../pages/Edificios";
-import { EdificioContextComparador } from "../../pages/Comparador";
 import { EdificioContextNotificaciones } from "../../pages/Notificaciones";
 
 const SideBar = ({edificios}) => {
@@ -19,9 +18,6 @@ const SideBar = ({edificios}) => {
             break;
         case '/edificios':
             context = EdificioContextEdificios;
-            break;
-        case '/comparador':
-            context = EdificioContextComparador;
             break;
         case '/notificaciones':
             context = EdificioContextNotificaciones;

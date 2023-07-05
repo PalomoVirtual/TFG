@@ -5,7 +5,7 @@ import { SelectPicker } from "rsuite";
 import 'rsuite/dist/rsuite-no-reset.min.css';
 import Chart from "react-google-charts";
 
-const GraficoConsumo = ({rows}) =>{
+const GraficoConsumoMultiple = ({rows}) =>{
     const [tipoGrafico, setTipoGrafico] = useState("LineChart");
 
 
@@ -90,8 +90,8 @@ const GraficoConsumo = ({rows}) =>{
     );
 };
 
-GraficoConsumo.propTypes = {
+GraficoConsumoMultiple.propTypes = {
     rows: PropTypes.array
 };
 
-export default GraficoConsumo;
+export default GraficoConsumoMultiple;
