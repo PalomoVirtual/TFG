@@ -34,7 +34,6 @@ const Dashboard = () =>{
             fetch('http://localhost:8080/api/history/' + selected.toString() + "/minMax")
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
                         if(data[0] != null){
                             setConsumoMinMax([data[0], data[1]]);
                         }
@@ -48,8 +47,6 @@ const Dashboard = () =>{
 
     useEffect(() => {
         if(selected){
-            console.log(fechaRange);
-            console.log(consumoRange);
             const controller = new AbortController();
             const signal = controller.signal;
             const socket = new SockJS('http://localhost:8080/gs-guide-websocket');
@@ -57,8 +54,7 @@ const Dashboard = () =>{
             
             setBuffer([]);
             setFetching(true);
-            stompClient.connect({}, (frame) => {
-                console.log('Connected: ' + frame);
+            stompClient.connect({}, () => {
                 stompClient.subscribe('/topic/update', (message) => {
                     const receivedMessage = JSON.parse(message.body);
                     const receivedBuildingId = receivedMessage.buildingId;
@@ -111,10 +107,6 @@ const Dashboard = () =>{
                 .then(response => response.json())
                 .then(data => {
                 if (!signal.aborted) {
-                    console.log("estamos dentro -----  " + paramFetch);
-                    console.log(data);
-
-
                     setRows(data.concat(buffer));
                 }
                 setFetching(false);

@@ -4,14 +4,15 @@ import PropTypes from 'prop-types';
 import { EdificioContextComparador } from "../../pages/Comparador";
 import EdificioSideBarMultiple from "../EdificioSideBarMultiple";
 
-const SideBarMultiple = ({edificios}) => {
-    const { selected, setSelected } = useContext(EdificioContextComparador);
+const SideBarMultiple = ({edificios, select, deselect}) => {
+    const { selected,  } = useContext(EdificioContextComparador);
     
+
     return (
     <div className="verticalContainer sideBar">
         <div className="edificios verticalContainer">
             {edificios.map((edificio) => (
-                <EdificioSideBarMultiple name={edificio.name} key={edificio.id} isSelected={edificio.id === selected} onSelected={() => setSelected(edificio.id)}></EdificioSideBarMultiple>
+                <EdificioSideBarMultiple name={edificio.name} key={edificio.id} isSelected={selected.has(edificio.id)} onSelected={() => select(edificio.id)} onDeselected={() => deselect(edificio.id)}></EdificioSideBarMultiple>
             ))}
         </div>
     </div>
@@ -25,6 +26,8 @@ const SideBarMultiple = ({edificios}) => {
         name: PropTypes.string.isRequired,
       })
     ).isRequired,
+    select: PropTypes.func,
+    deselect: PropTypes.func
   };
   
   export default SideBarMultiple;

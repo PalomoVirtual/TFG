@@ -71,8 +71,6 @@ const GraficoConsumo = ({rows}) =>{
 
     let rowsFormatted = rowsDownSample.map(row => [row.date, row.value]);
     let rowsFinal = [["Fecha", "Consumo (kWh)"]].concat(rowsFormatted);
-    console.log(rowsFinal.length);
-
     
     return(
         <div className="verticalContainer marcoGraficoConsumo">

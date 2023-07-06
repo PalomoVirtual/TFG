@@ -27,8 +27,8 @@ const Filtros = ({setFechaRange, setConsumoRange, consumoRange, fechaRange, cons
         setFechaRangeChanging(value);
     }
 
-    console.log(consumoMinMax);
-    console.log("HOLA");
+    // console.log(consumoMinMax);
+    // console.log("HOLA");
 
     const defaultSlider = [0, 1000];
 
@@ -46,7 +46,6 @@ const Filtros = ({setFechaRange, setConsumoRange, consumoRange, fechaRange, cons
         defaultSlider[1] = consumoRange[1];
     }
 
-    console.log(defaultSlider);
     return(
         <div className="verticalContainer marcoFiltros">
             <div>Filtros</div>

@@ -58,7 +58,15 @@ const TablaConsumoMultiple = ({rows}) => {
 };
 
 TablaConsumoMultiple.propTypes = {
-  rows: PropTypes.array
+//   rows: function(props, propName, componentName) {
+//     if (!(props[propName] instanceof Map)) {
+//       return new Error(
+//         'Invalid prop `' + propName + '` supplied to' +
+//         ' `' + componentName + '`. Expected a Map.'
+//       );
+//     }
+//   },
+  rows: PropTypes.instanceOf(Map)
 };
 
 export default TablaConsumoMultiple;

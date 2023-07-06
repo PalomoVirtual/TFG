@@ -11,44 +11,63 @@ export const EdificioContextComparador = React.createContext();
 
 const Comparador = () =>{
     const [edificios, setEdificios] = useState(null);
-    const [selected, setSelected] = useState(null);
+    const [selected, setSelected] = useState(new Set());
     const [fechaRange, setFechaRange] = useState(null);
     const [consumoRange, setConsumoRange] = useState([-1, -1]);
     const [consumoMinMax, setConsumoMinMax] = useState([-1, -1]);
     const [fetching, setFetching] = useState(false);
-    const [buffer, setBuffer] = useState([]);
-    const [rows, setRows] = useState([]);
+    const [buffer, setBuffer] = useState({});
+    const [rows, setRows] = useState(new Map());
+
+    function select(id){
+        setSelected(prev => new Set(prev).add(id));
+    }
+
+    function deselect(id) {
+        setSelected(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(id);
+          return newSet;
+        });
+
+        setRows(prev => {
+            const newMap = new Map(prev);
+            newMap.delete(id);
+            return newMap;
+        });
+      }
 
     useEffect(() => {
         fetch('http://localhost:8080/api/building').then(res => {
             return res.json();
         }).then((data) => {
             setEdificios(data);
-            setSelected(data[0].id);
         });   
     }, []);
 
     useEffect(() => {
-        if(selected){
-            fetch('http://localhost:8080/api/history/' + selected.toString() + "/minMax")
+        if(selected.size > 0 && edificios != null){
+            let min = Infinity;
+            let max = -Infinity;
+    
+            const promises = Array.from(selected).map(id => 
+                fetch('http://localhost:8080/api/history/' + id + "/minMax")
                     .then(response => response.json())
                     .then(data => {
-                        console.log(data);
-                        if(data[0] != null){
-                            setConsumoMinMax([data[0], data[1]]);
-                        }
-                        else{
-                            setConsumoMinMax([0, 0]);
-                        }
-                    });
+                        min = Math.min(min, data[0]);
+                        max = Math.max(max, data[1]);
+                    })
+            );
+    
+            Promise.all(promises).then(() => setConsumoMinMax([min, max]));
         }
-        setConsumoRange([-1, -1]);
-    }, [selected]);
+        else{
+            setConsumoMinMax([-1, -1])
+        }
+    }, [selected, edificios]);
 
     useEffect(() => {
-        if(selected){
-            console.log(fechaRange);
-            console.log(consumoRange);
+        if(selected.size > 0){
             const controller = new AbortController();
             const signal = controller.signal;
             const socket = new SockJS('http://localhost:8080/gs-guide-websocket');
@@ -56,19 +75,26 @@ const Comparador = () =>{
             
             setBuffer([]);
             setFetching(true);
-            stompClient.connect({}, (frame) => {
-                console.log('Connected: ' + frame);
+            stompClient.connect({}, () => {
                 stompClient.subscribe('/topic/update', (message) => {
                     const receivedMessage = JSON.parse(message.body);
                     const receivedBuildingId = receivedMessage.buildingId;
-                    if (receivedBuildingId === selected) {
+                    if (selected.has(receivedBuildingId)) {
                         const dateSocket = parse(receivedMessage.date, 'HH:mm:ss dd/MM/yyyy', new Date());
                         if(fechaRange == null || (fechaRange[0] <= dateSocket && dateSocket <= fechaRange[1])){
                             if (fetching) {
-                                setBuffer(buffer => [...buffer, receivedMessage]);
+                                setBuffer(prev => {
+                                    const existingArray = prev[receivedBuildingId] || [];
+                                    return { ...prev, [receivedBuildingId]: [...existingArray, ...receivedMessage] };
+                                });
                             }
                             else {
-                                setRows(rows => [...rows, receivedMessage]);
+                                setRows(prev => {
+                                    const newMap = new Map(prev);
+                                    const existingArray = newMap.get(receivedBuildingId) || [];
+                                    newMap.set(receivedBuildingId, [...existingArray, ...receivedMessage]);
+                                    return newMap;
+                                });
                             }
                         }
                     }
@@ -76,14 +102,21 @@ const Comparador = () =>{
             });
             
             if(fechaRange == null && consumoRange[0] == -1 && consumoRange[1] == -1){
-                fetch('http://localhost:8080/api/history/' + selected.toString())
-                .then(response => response.json())
-                .then(data => {
-                    if (!signal.aborted) {
-                        setRows(data.concat(buffer));
-                    }
-                setFetching(false);
-                });
+                for(let edificio of selected){
+                    setFetching(true);
+                    fetch('http://localhost:8080/api/history/' + edificio.toString())
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!signal.aborted) {
+                            setRows(prev => {
+                                const newMap = new Map(prev);
+                                newMap.set(edificio, data.concat(buffer));
+                                return newMap;
+                            });
+                        }
+                        setFetching(false);
+                    });
+                }
             }
             else{
                 let paramFetch = "?";
@@ -105,19 +138,22 @@ const Comparador = () =>{
                     paramFetch += "consumoFinal=" + consumoRange[1].toString();
                 }
 
-                
-                fetch('http://localhost:8080/api/history/' + selected.toString() + "/from" + paramFetch)
-                .then(response => response.json())
-                .then(data => {
-                if (!signal.aborted) {
-                    console.log("estamos dentro -----  " + paramFetch);
-                    console.log(data);
-
-
-                    setRows(data.concat(buffer));
+                for(let edificio of selected){
+                    setFetching(true);
+                    fetch('http://localhost:8080/api/history/' + edificio.toString() + "/from" + paramFetch)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!signal.aborted) {
+                            setRows(prev => {
+                                const newMap = new Map(prev);
+                                newMap.set(edificio, data.concat(buffer));
+                                return newMap;
+                            });
+                        }
+                        setFetching(false);
+                    });
                 }
-                setFetching(false);
-                });
+
             }
 
             return () => {
@@ -132,7 +168,7 @@ const Comparador = () =>{
     return(
         <EdificioContextComparador.Provider value={{selected, setSelected}}>
             <div className="horizontalContainer mainContent">
-                {edificios && <SideBarMultiple edificios={edificios}></SideBarMultiple>}
+                {edificios && <SideBarMultiple edificios={edificios} select={select} deselect={deselect}></SideBarMultiple>}
                 <div className="panelCentral horizontalContainer">
                     <div className="verticalContainer columnaIzquierdaDashboard">
                         {selected && <TablaConsumoMultiple rows={rows}></TablaConsumoMultiple>}
