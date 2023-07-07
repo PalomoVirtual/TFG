@@ -170,7 +170,7 @@ const Comparador = () =>{
             <div className="horizontalContainer mainContent">
                 {edificios && <SideBarMultiple edificios={edificios} select={select} deselect={deselect}></SideBarMultiple>}
                 <div className="panelCentral horizontalContainer">
-                    <div className="verticalContainer columnaIzquierdaDashboard">
+                    <div className="verticalContainer columnaIzquierdaComparador">
                         {selected && <TablaConsumoMultiple rows={rows}></TablaConsumoMultiple>}
                     </div>
                     <div className="verticalContainer columnaDerechaDashboard">

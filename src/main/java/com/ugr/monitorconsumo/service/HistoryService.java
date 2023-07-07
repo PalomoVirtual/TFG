@@ -17,7 +17,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -51,12 +51,13 @@ public class HistoryService {
             HistoryRecord nuevoRecord = historyRecordMapper.historyRecordDTOToHistoryRecord(historyRecordDTO);
             nuevoRecord.setBuilding(edificioAsociado);
             nuevoRecord.setValue(consumo);
-            long time = nuevoRecord.getDate().getTime();
-            time = Math.round(time / 1000.0) * 1000;
-            time = time - 1000*3600*2;
-            long roundedTime = Math.round(time / 1000.0) * 1000;
-            Timestamp ajusteZona = new Timestamp(roundedTime);
-            nuevoRecord.setDate(ajusteZona);
+//            long time = nuevoRecord.getDate().getTime();
+//            time = Math.round(time / 1000.0) * 1000;
+//            time = time - 1000*3600*2;
+//            long roundedTime = Math.round(time / 1000.0) * 1000;
+//            Timestamp ajusteZona = new Timestamp(roundedTime);
+//            nuevoRecord.setDate(ajusteZona);
+            LocalDateTime fecha = nuevoRecord.getDate();
             nuevoRecord = historyRepository.save(nuevoRecord);
             edificioAsociado.setLastAbsoluteValue(historyRecordDTO.getValue());
             buildingService.updateBuilding(edificioAsociado);
@@ -70,7 +71,7 @@ public class HistoryService {
                         message.setSubject("Consumo máximo configurado alcanzado");
                         message.setText("Le informamos de que el consumo establecido como máximo (" +
                                 edificioAsociado.getNotificationValue() + " kWh) para el edificio " +
-                                edificioAsociado.getName() + " ha sido alcanzado, con un valor de " + consumo + " kWh. Este suceso ha tenido lugar en la fecha " + ajusteZona.toString());
+                                edificioAsociado.getName() + " ha sido alcanzado, con un valor de " + consumo + " kWh. Este suceso ha tenido lugar en la fecha " + fecha.toString());
 
                         Transport.send(message);
                     }
@@ -101,10 +102,12 @@ public class HistoryService {
     }
 
     public List<HistoryRecordOutDTO> getHistoryOfBuilding(Long buildingId){
-        return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findAllByBuildingIdOrderByDateAsc(buildingId));
+        List<HistoryRecord> repoRes = historyRepository.findAllByBuildingIdOrderByDateAsc(buildingId);
+        List<HistoryRecordOutDTO> res = historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(repoRes);
+        return res;
     }
 
-    public List<HistoryRecordOutDTO> getHistoryOfBuildingFiltered(Long buildingId, Timestamp fechaInicial, Timestamp fechaFinal, Double consumoInicial, Double consumoFinal ){
+    public List<HistoryRecordOutDTO> getHistoryOfBuildingFiltered(Long buildingId, LocalDateTime fechaInicial, LocalDateTime fechaFinal, Double consumoInicial, Double consumoFinal ){
         if(consumoInicial == null && consumoFinal == null){
             return historyRecordMapper.historyRecordListToHistoryRecordOutDTOList(historyRepository.findByBuildingIdAndDateBetweenOrderByDateAsc(buildingId, fechaInicial, fechaFinal));
         }

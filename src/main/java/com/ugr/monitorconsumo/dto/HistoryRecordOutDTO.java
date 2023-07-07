@@ -1,6 +1,5 @@
 package com.ugr.monitorconsumo.dto;
 
-import java.sql.Timestamp;
 import java.util.Objects;
 
 public class HistoryRecordOutDTO {

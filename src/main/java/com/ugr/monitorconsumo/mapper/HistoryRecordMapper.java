@@ -11,7 +11,8 @@ import org.mapstruct.Named;
 import org.mapstruct.factory.Mappers;
 import java.text.SimpleDateFormat;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Mapper
@@ -21,7 +22,7 @@ public interface HistoryRecordMapper {
     @Mapping(source = "building", target = "buildingId", qualifiedByName = "buildingToBuildingId")
     HistoryRecordDTO historyRecordToHistoryRecordDTO(HistoryRecord historyRecord);
     HistoryRecord historyRecordDTOToHistoryRecord(HistoryRecordDTO historyRecordDTO);
-    HistoryRecordDTOChild historyRecordToHistoryRecordDTOChild(HistoryRecord historyRecord);
+//    HistoryRecordDTOChild historyRecordToHistoryRecordDTOChild(HistoryRecord historyRecord);
     @Mapping(source = "date", target = "date", qualifiedByName = "dateToString")
     @Mapping(source = "building", target = "buildingId", qualifiedByName = "buildingToBuildingId")
     HistoryRecordOutDTO historyRecordToHistoryRecordOutDTO(HistoryRecord historyRecord);
@@ -34,9 +35,10 @@ public interface HistoryRecordMapper {
     }
 
     @Named("dateToString")
-    public static String dateToString(Timestamp date) {
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+    public static String dateToString(LocalDateTime date) {
+//        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-        return sdf.format(date);
+        return date.format(formatter);
     }
 }

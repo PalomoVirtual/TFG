@@ -6,16 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 public interface HistoryRepository extends JpaRepository<HistoryRecord, Long> {
     List<HistoryRecord> findAllByBuildingIdOrderByDateAsc(Long buildingId);
 
-    List<HistoryRecord> findByBuildingIdAndDateAfterOrderByDateAsc(Long buildingId, Timestamp date);
+    List<HistoryRecord> findByBuildingIdAndDateAfterOrderByDateAsc(Long buildingId, LocalDateTime date);
 
-    List<HistoryRecord> findByBuildingIdAndDateBetweenOrderByDateAsc(Long buildingId, Timestamp dateInicial, Timestamp dateFinal);
+    List<HistoryRecord> findByBuildingIdAndDateBetweenOrderByDateAsc(Long buildingId, LocalDateTime dateInicial, LocalDateTime dateFinal);
 
     List<HistoryRecord> findByBuildingIdAndValueGreaterThanEqualOrderByDateAsc(Long buildingId, Double consumoInicial);
 
@@ -23,11 +23,11 @@ public interface HistoryRepository extends JpaRepository<HistoryRecord, Long> {
 
     List<HistoryRecord> findByBuildingIdAndValueBetweenOrderByDateAsc(Long buildingId, Double consumoInicial, Double consumoFinal);
 
-    List<HistoryRecord> findByBuildingIdAndDateBetweenAndValueGreaterThanEqualOrderByDateAsc(Long buildingId, Timestamp dateInicial, Timestamp dateFinal, Double consumoInicial);
+    List<HistoryRecord> findByBuildingIdAndDateBetweenAndValueGreaterThanEqualOrderByDateAsc(Long buildingId, LocalDateTime dateInicial, LocalDateTime dateFinal, Double consumoInicial);
 
-    List<HistoryRecord> findByBuildingIdAndDateBetweenAndValueLessThanEqualOrderByDateAsc(Long buildingId, Timestamp dateInicial, Timestamp dateFinal, Double consumoFinal);
+    List<HistoryRecord> findByBuildingIdAndDateBetweenAndValueLessThanEqualOrderByDateAsc(Long buildingId, LocalDateTime dateInicial, LocalDateTime dateFinal, Double consumoFinal);
 
-    List<HistoryRecord> findByBuildingIdAndDateBetweenAndValueBetweenOrderByDateAsc(Long buildingId, Timestamp dateInicial, Timestamp dateFinal, Double consumoInicial, Double consumoFinal);
+    List<HistoryRecord> findByBuildingIdAndDateBetweenAndValueBetweenOrderByDateAsc(Long buildingId, LocalDateTime dateInicial, LocalDateTime dateFinal, Double consumoInicial, Double consumoFinal);
 
     @Query(value = "SELECT * FROM HISTORY_RECORD h WHERE h.building_id = :buildingId ORDER BY h.date DESC LIMIT 2", nativeQuery = true)
     List<HistoryRecord> findTop2ByBuildingIdOrderByDateDesc(@Param("buildingId") Long buildingId);

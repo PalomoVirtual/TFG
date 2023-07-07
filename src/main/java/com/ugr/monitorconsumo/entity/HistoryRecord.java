@@ -2,7 +2,7 @@ package com.ugr.monitorconsumo.entity;
 
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -14,7 +14,7 @@ public class HistoryRecord {
     private Long id;
 
     @Column(nullable = false)
-    private Timestamp date;
+    private LocalDateTime date;
 
     @Column(nullable = false)
     private double value;
@@ -27,7 +27,7 @@ public class HistoryRecord {
 
     }
 
-    public HistoryRecord(Timestamp date, double value, Building building) {
+    public HistoryRecord(LocalDateTime date, double value, Building building) {
         this.date = date;
         this.value = value;
         this.building = building;
@@ -41,11 +41,11 @@ public class HistoryRecord {
         this.id = id;
     }
 
-    public Timestamp getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

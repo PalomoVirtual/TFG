@@ -27,9 +27,6 @@ const Filtros = ({setFechaRange, setConsumoRange, consumoRange, fechaRange, cons
         setFechaRangeChanging(value);
     }
 
-    // console.log(consumoMinMax);
-    // console.log("HOLA");
-
     const defaultSlider = [0, 1000];
 
     if(consumoRange[0] == -1){

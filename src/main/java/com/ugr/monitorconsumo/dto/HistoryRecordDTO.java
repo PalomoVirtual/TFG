@@ -3,13 +3,13 @@ package com.ugr.monitorconsumo.dto;
 import com.ugr.monitorconsumo.entity.Building;
 import jakarta.persistence.*;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class HistoryRecordDTO {
     private Long id;
 
-    private Timestamp date;
+    private LocalDateTime date;
 
     private double value;
 
@@ -27,11 +27,11 @@ public class HistoryRecordDTO {
         this.id = id;
     }
 
-    public Timestamp getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(Timestamp date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

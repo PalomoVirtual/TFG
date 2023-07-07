@@ -13,7 +13,9 @@ const Edificios = () =>{
             return res.json();
         }).then((data) => {
             setEdificios(data);
-            setSelected(data[0].id);
+            if(data.length > 0){
+                setSelected(data[0].id);
+            }
         })   
     }, []);
 

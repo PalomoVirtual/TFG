@@ -9,10 +9,9 @@ const GraficoConsumoMultiple = ({rows}) =>{
     const [tipoGrafico, setTipoGrafico] = useState("LineChart");
 
 
-    let rowsDownSample = rows;
+    let rowsDownSample = new Map([...rows]);
     rows.forEach((filas, buildingId) => {
         if(filas.length > 200){
-            console.log("Mas de 200 --- " + filas + " " + buildingId);
             let step = Math.floor(filas.length / 200);
             rowsDownSample.set(buildingId, filas.filter((_, index) => index % step === 0));
         }
@@ -74,7 +73,6 @@ const GraficoConsumoMultiple = ({rows}) =>{
     let header = ["Fecha"];
     for(var index=0; index < rowsDownSample.size; index++){
         header = header.concat("Consumo (kWh) - " + (index+1));
-        console.log("ejecucion concat header --- " + header);
     }
 
     // Primero, recogemos todas las fechas en todos los arrays en un Set para eliminar duplicados.
@@ -122,8 +120,6 @@ const GraficoConsumoMultiple = ({rows}) =>{
 
     // let rowsFormatted = rowsDownSample.map(row => [row.date, row.value]);
     let rowsFinal = [header].concat(chartData);
-
-    console.log(rowsFinal);
     
     return(
         <div className="verticalContainer marcoGraficoConsumo">

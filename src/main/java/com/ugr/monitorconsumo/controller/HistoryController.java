@@ -9,7 +9,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -35,16 +34,7 @@ public class HistoryController {
                                                            @RequestParam(value="consumoInicial", required = false) Double consumoInicial,
                                                            @RequestParam(value="consumoFinal", required = false) Double consumoFinal){
 
-        Timestamp fechaInicialFiltered = null;
-        Timestamp fechaFinalFiltered = null;
-        if(fechaInicial != null){
-            fechaInicialFiltered = Timestamp.valueOf(fechaInicial);
-        }
-        if(fechaFinal != null){
-            fechaFinalFiltered = Timestamp.valueOf(fechaFinal);
-        }
-
-        return historyService.getHistoryOfBuildingFiltered(buildingId, fechaInicialFiltered, fechaFinalFiltered, consumoInicial, consumoFinal);
+        return historyService.getHistoryOfBuildingFiltered(buildingId, fechaInicial, fechaFinal, consumoInicial, consumoFinal);
     }
 
     @GetMapping("/history/{buildingId}/current")

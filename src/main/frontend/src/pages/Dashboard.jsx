@@ -20,12 +20,35 @@ const Dashboard = () =>{
     const [buffer, setBuffer] = useState([]);
     const [rows, setRows] = useState([]);
 
+    const uniqueSet = new Set();
+  // Este Map almacenará las duplicaciones del primer array
+  const duplicateMap = new Map();
+
+  // Obtenemos el primer array
+
+  if(rows != undefined){
+    // Iteramos sobre cada elemento en el primer array
+    rows.forEach((obj) => {
+      if (uniqueSet.has(obj.date)) {
+        // Si ya hemos visto este elemento, es una duplicación
+        // Aquí podríamos incrementar un contador para ese elemento duplicado
+        duplicateMap.set(obj.date, (duplicateMap.get(obj.date) || 0) + 1);
+      } else {
+        // Si no hemos visto este elemento, lo añadimos al Set
+        uniqueSet.add(obj.date);
+      }
+    });
+  
+    console.log(Array.from(duplicateMap.entries()));
+  }
     useEffect(() => {
         fetch('http://localhost:8080/api/building').then(res => {
             return res.json();
         }).then((data) => {
             setEdificios(data);
-            setSelected(data[0].id);
+            if(data.length > 0){
+                setSelected(data[0].id);
+            }
         });   
     }, []);
 
