@@ -81,11 +81,11 @@ const TablaConsumoMultiple = ({rows}) => {
       }
     
       let dateArray = Array.from(dateSet).sort((a, b) => {
-          let [timeA, dateA] = a.split(" ");
-          let [timeB, dateB] = b.split(" ");
+          let [dateA, timeA] = a.split(" ");
+          let [dateB, timeB] = b.split(" ");
       
-          let [dayA, monthA, yearA] = dateA.split("/");
-          let [dayB, monthB, yearB] = dateB.split("/");
+          let [yearA, monthA, dayA] = dateA.split("-");
+          let [yearB, monthB, dayB] = dateB.split("-");
       
           let dateObjA = new Date(yearA, monthA - 1, dayA);
           let dateObjB = new Date(yearB, monthB - 1, dayB);

@@ -87,12 +87,12 @@ const GraficoConsumoMultiple = ({rows}) =>{
     // Convertimos el Set a un Array y lo ordenamos.
     let dateArray = Array.from(dateSet).sort((a, b) => {
         // Separamos la fecha y la hora
-        let [timeA, dateA] = a.split(" ");
-        let [timeB, dateB] = b.split(" ");
+        let [dateA, timeA] = a.split(" ");
+        let [dateB, timeB] = b.split(" ");
     
         // Desestructuramos la fecha en día, mes y año.
-        let [dayA, monthA, yearA] = dateA.split("/");
-        let [dayB, monthB, yearB] = dateB.split("/");
+        let [yearA, monthA, dayA] = dateA.split("-");
+        let [yearB, monthB, dayB] = dateB.split("-");
     
         // Creamos objetos Date con los valores.
         let dateObjA = new Date(yearA, monthA - 1, dayA);
