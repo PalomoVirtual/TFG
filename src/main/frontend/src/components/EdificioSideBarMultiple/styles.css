@@ -1,0 +1,11 @@
+.indexEdificio{
+    font-weight: bold;
+}
+
+.growContainer{
+    flex-grow: 1;
+}
+
+.nombreEdificioMultiple{
+    width: 50px;
+}

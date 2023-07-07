@@ -175,7 +175,8 @@ const Comparador = () =>{
                     </div>
                     <div className="verticalContainer columnaDerechaDashboard">
                         {selected && <GraficoConsumoMultiple rows={rows}></GraficoConsumoMultiple>}
-                        {consumoMinMax[0] != -1 && consumoMinMax[1] != -1 && <Filtros consumoMinMax={consumoMinMax} setFechaRange={setFechaRange} setConsumoRange={setConsumoRange} consumoRange={consumoRange} fechaRange={fechaRange}></Filtros>}
+                        {/* {consumoMinMax[0] != -1 && consumoMinMax[1] != -1 && <Filtros consumoMinMax={consumoMinMax} setFechaRange={setFechaRange} setConsumoRange={setConsumoRange} consumoRange={consumoRange} fechaRange={fechaRange}></Filtros>} */}
+                        <Filtros consumoMinMax={consumoMinMax} setFechaRange={setFechaRange} setConsumoRange={setConsumoRange} consumoRange={consumoRange} fechaRange={fechaRange}></Filtros>
                     </div>
                 </div>
             </div>

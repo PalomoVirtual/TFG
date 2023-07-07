@@ -7,12 +7,11 @@ import EdificioSideBarMultiple from "../EdificioSideBarMultiple";
 const SideBarMultiple = ({edificios, select, deselect}) => {
     const { selected,  } = useContext(EdificioContextComparador);
     
-
     return (
     <div className="verticalContainer sideBar">
         <div className="edificios verticalContainer">
             {edificios.map((edificio) => (
-                <EdificioSideBarMultiple name={edificio.name} key={edificio.id} isSelected={selected.has(edificio.id)} onSelected={() => select(edificio.id)} onDeselected={() => deselect(edificio.id)}></EdificioSideBarMultiple>
+                <EdificioSideBarMultiple name={edificio.name} key={edificio.id} index={Array.from(selected).indexOf(edificio.id)} isSelected={selected.has(edificio.id)} onSelected={() => select(edificio.id)} onDeselected={() => deselect(edificio.id)}></EdificioSideBarMultiple>
             ))}
         </div>
     </div>
