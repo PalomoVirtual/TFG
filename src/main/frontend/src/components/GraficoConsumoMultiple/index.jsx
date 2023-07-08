@@ -45,7 +45,8 @@ const GraficoConsumoMultiple = ({rows}) =>{
                         chartArea: {width: "80%", left: "15%"},
                         explorer: {actions: ['dragToPan', 'rightClickToReset'], axis: "horizontal"},
                         hAxis: {slantedText: true, maxTextLines: 1, showTextEvery: 20},
-                        selectionMode: "multiple"
+                        selectionMode: "multiple",
+                        // interpolateNulls: true
                 };
             case 'ScatterChart':
             return {
@@ -72,7 +73,7 @@ const GraficoConsumoMultiple = ({rows}) =>{
 
     let header = ["Fecha"];
     for(var index=0; index < rowsDownSample.size; index++){
-        header = header.concat("Consumo (kWh) - " + (index+1));
+        header = header.concat({label: ("Consumo (kWh) - " + (index+1)), type: 'number'});
     }
 
     // Primero, recogemos todas las fechas en todos los arrays en un Set para eliminar duplicados.

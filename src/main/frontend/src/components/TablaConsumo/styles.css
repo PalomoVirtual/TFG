@@ -54,6 +54,25 @@
     background: #00AEF0; 
 }
 
+::-webkit-scrollbar {
+    width: 20px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    box-shadow: inset 0 0 5px grey;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #00AEF0; 
+}
+
 .valorConsumoIncrementado {
     color: #DF5D5D;
     /* Añade aquí los estilos para cuando el consumo incrementa */

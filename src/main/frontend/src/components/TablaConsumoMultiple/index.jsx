@@ -100,12 +100,14 @@ const TablaConsumoMultiple = ({rows}) => {
       });
     
       for (let date of dateArray) {
-          let row = [date];
-          for (let array of rows.values()) {
-              let obj = binarySearch(array, date);
-              row.push(obj ? obj.value : null);
+          if(date != undefined){
+            let row = [date];
+            for (let array of rows.values()) {
+                let obj = binarySearch(array, date);
+                row.push(obj ? obj.value : null);
+            }
+            newChartData.push(row);
           }
-          newChartData.push(row);
       }
       
       if(newChartData.length > 0){
@@ -198,6 +200,7 @@ const TablaConsumoMultiple = ({rows}) => {
 
   return (
     <div className='marcoTablaConsumo verticalContainer'>
+      {console.log(chartData)}
       <div className='tituloTablaConsumo'>Tabla de consumo (kWh)</div>
       {chartData.length > 0 ? <AutoSizer>
         {({height, width }) => (
