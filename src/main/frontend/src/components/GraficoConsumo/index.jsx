@@ -10,9 +10,9 @@ const GraficoConsumo = ({rows}) =>{
 
 
     let rowsDownSample = rows;
-    if(rows.length > 200){
-        let step = Math.floor(rows.length / 200);
-        rowsDownSample = rows.filter((_, index) => index % step === 0);
+    if(rows.length > 100){
+        let step = Math.floor(rows.length / 100);
+        rowsDownSample = rows.filter((_, index) => index % step === 0 || index === 0 || index === rows.length - 1);
     }
 
     

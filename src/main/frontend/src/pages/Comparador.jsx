@@ -15,8 +15,8 @@ const Comparador = () =>{
     const [fechaRange, setFechaRange] = useState(null);
     const [consumoRange, setConsumoRange] = useState([-1, -1]);
     const [consumoMinMax, setConsumoMinMax] = useState([-1, -1]);
-    const [fetching, setFetching] = useState(false);
-    const [buffer, setBuffer] = useState({});
+    // const [fetching, setFetching] = useState(false);
+    // const [buffer, setBuffer] = useState({});
     const [rows, setRows] = useState(new Map());
 
     function select(id){
@@ -70,13 +70,13 @@ const Comparador = () =>{
 
     useEffect(() => {
         if(selected.size > 0){
+            const buffer = {};
+            let fetching = false;
             const controller = new AbortController();
             const signal = controller.signal;
             const socket = new SockJS('http://localhost:8080/gs-guide-websocket');
             const stompClient = Stomp.over(socket);
             
-            setBuffer([]);
-            setFetching(true);
             stompClient.connect({}, () => {
                 stompClient.subscribe('/topic/update', (message) => {
                     const receivedMessage = JSON.parse(message.body);
@@ -85,16 +85,20 @@ const Comparador = () =>{
                         const dateSocket = parse(receivedMessage.date, 'HH:mm:ss dd/MM/yyyy', new Date());
                         if(fechaRange == null || (fechaRange[0] <= dateSocket && dateSocket <= fechaRange[1])){
                             if (fetching) {
-                                setBuffer(prev => {
-                                    const existingArray = prev[receivedBuildingId] || [];
-                                    return { ...prev, [receivedBuildingId]: [...existingArray, ...receivedMessage] };
-                                });
+                                // setBuffer(prev => {
+                                //     const existingArray = prev[receivedBuildingId] || [];
+                                //     return { ...prev, [receivedBuildingId]: [...existingArray, ...receivedMessage] };
+                                // });
+                                if (!buffer[receivedBuildingId]) {
+                                    buffer[receivedBuildingId] = [];
+                                }
+                                buffer[receivedBuildingId].push(receivedMessage);
                             }
                             else {
                                 setRows(prev => {
                                     const newMap = new Map(prev);
                                     const existingArray = newMap.get(receivedBuildingId) || [];
-                                    newMap.set(receivedBuildingId, [...existingArray, ...receivedMessage]);
+                                    newMap.set(receivedBuildingId, [...existingArray, receivedMessage]);
                                     return newMap;
                                 });
                             }
@@ -105,18 +109,18 @@ const Comparador = () =>{
             
             if(fechaRange == null && consumoRange[0] == -1 && consumoRange[1] == -1){
                 for(let edificio of selected){
-                    setFetching(true);
+                    fetching = true;
                     fetch('http://localhost:8080/api/history/' + edificio.toString())
                     .then(response => response.json())
                     .then(data => {
                         if (!signal.aborted) {
                             setRows(prev => {
                                 const newMap = new Map(prev);
-                                newMap.set(edificio, data.concat(buffer));
+                                newMap.set(edificio, data.concat(buffer[edificio] || []));
                                 return newMap;
                             });
                         }
-                        setFetching(false);
+                        fetching = false
                     });
                 }
             }
@@ -141,18 +145,19 @@ const Comparador = () =>{
                 }
 
                 for(let edificio of selected){
-                    setFetching(true);
+                    fetching = true;
                     fetch('http://localhost:8080/api/history/' + edificio.toString() + "/from" + paramFetch)
                     .then(response => response.json())
                     .then(data => {
                         if (!signal.aborted) {
                             setRows(prev => {
                                 const newMap = new Map(prev);
-                                newMap.set(edificio, data.concat(buffer));
+                                newMap.set(edificio, data.concat(buffer[edificio] || []));
                                 return newMap;
                             });
+                            buffer[edificio] = [];
                         }
-                        setFetching(false);
+                        fetching = false;
                     });
                 }
 

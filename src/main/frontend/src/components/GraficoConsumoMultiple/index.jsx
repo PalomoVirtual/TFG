@@ -18,7 +18,7 @@ const GraficoConsumoMultiple = ({rows}) =>{
     rows.forEach((filas, buildingId) => {
         if(filas.length > filasMax){
             let step = Math.floor(filas.length / filasMax);
-            rowsDownSample.set(buildingId, filas.filter((_, index) => index % step === 0));
+            rowsDownSample.set(buildingId, filas.filter((_, index) => index % step === 0 || index === 0 || index === filas.length - 1));
         }
     });
 

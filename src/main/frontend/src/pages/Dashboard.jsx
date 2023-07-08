@@ -16,8 +16,8 @@ const Dashboard = () =>{
     const [fechaRange, setFechaRange] = useState(null);
     const [consumoRange, setConsumoRange] = useState([-1, -1]);
     const [consumoMinMax, setConsumoMinMax] = useState([-1, -1]);
-    const [fetching, setFetching] = useState(false);
-    const [buffer, setBuffer] = useState([]);
+    // const [fetching, setFetching] = useState(false);
+    // const [buffer, setBuffer] = useState([]);
     const [rows, setRows] = useState([]);
 
     const uniqueSet = new Set();
@@ -70,22 +70,27 @@ const Dashboard = () =>{
 
     useEffect(() => {
         if(selected){
+            const buffer = [];
+            let fetching = false;
             const controller = new AbortController();
             const signal = controller.signal;
             const socket = new SockJS('http://localhost:8080/gs-guide-websocket');
             const stompClient = Stomp.over(socket);
             
-            setBuffer([]);
-            setFetching(true);
             stompClient.connect({}, () => {
                 stompClient.subscribe('/topic/update', (message) => {
                     const receivedMessage = JSON.parse(message.body);
                     const receivedBuildingId = receivedMessage.buildingId;
                     if (receivedBuildingId === selected) {
-                        const dateSocket = parse(receivedMessage.date, 'HH:mm:ss dd/MM/yyyy', new Date());
+                        console.log("ENTRA BIEN --- ");
+                        console.log(receivedMessage);
+                        const dateSocket = parse(receivedMessage.date, 'yyyy-MM-dd HH:mm:ss', new Date());
+                        console.log("DATESOCKET --- " + dateSocket);
                         if(fechaRange == null || (fechaRange[0] <= dateSocket && dateSocket <= fechaRange[1])){
+                            console.log("FETCHING? --- " + fetching);
                             if (fetching) {
-                                setBuffer(buffer => [...buffer, receivedMessage]);
+                                buffer.push(receivedMessage);
+                                // setBuffer(buffer => [...buffer, receivedMessage]);
                             }
                             else {
                                 setRows(rows => [...rows, receivedMessage]);
@@ -96,13 +101,15 @@ const Dashboard = () =>{
             });
             
             if(fechaRange == null && consumoRange[0] == -1 && consumoRange[1] == -1){
+                fetching = true;
                 fetch('http://localhost:8080/api/history/' + selected.toString())
                 .then(response => response.json())
                 .then(data => {
                     if (!signal.aborted) {
                         setRows(data.concat(buffer));
+                        buffer.length = 0;
                     }
-                setFetching(false);
+                    fetching = false;
                 });
             }
             else{
@@ -125,14 +132,15 @@ const Dashboard = () =>{
                     paramFetch += "consumoFinal=" + consumoRange[1].toString();
                 }
 
-                
+                fetching = true;
                 fetch('http://localhost:8080/api/history/' + selected.toString() + "/from" + paramFetch)
                 .then(response => response.json())
                 .then(data => {
                 if (!signal.aborted) {
                     setRows(data.concat(buffer));
+                    buffer.length = 0;
                 }
-                setFetching(false);
+                    fetching = false;
                 });
             }
 
@@ -147,6 +155,7 @@ const Dashboard = () =>{
 
     return(
         <EdificioContextDashboard.Provider value={{selected, setSelected}}>
+            {console.log(rows)}
             <div className="horizontalContainer mainContent">
                 {edificios && <SideBar edificios={edificios}></SideBar>}
                 <div className="panelCentral horizontalContainer">
