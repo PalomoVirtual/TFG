@@ -107,6 +107,15 @@ const TablaConsumoMultiple = ({rows}) => {
           }
           newChartData.push(row);
       }
+      
+      if(newChartData.length > 0){
+        let header = [""];
+        for(let i=1; i<newChartData[newChartData.length-1].length; i++){
+          header.push("(" + i + ")");
+        }
+    
+        newChartData.push(header);
+      }
     return newChartData;
   }, [rows]);
 
@@ -146,6 +155,7 @@ const TablaConsumoMultiple = ({rows}) => {
                 {chartData[chartData.length-1-index][i+1]} { consumoClase[i] == 'valorConsumoIncrementado' ? <FontAwesomeIcon icon={faSortUp}></FontAwesomeIcon> : consumoClase[i] == 'valorConsumoDecrementado' ? <FontAwesomeIcon icon={faSortDown}></FontAwesomeIcon> : <></>}
             </div>
           ))}
+          {/* aaa */}
         </div>
 
       </div>
