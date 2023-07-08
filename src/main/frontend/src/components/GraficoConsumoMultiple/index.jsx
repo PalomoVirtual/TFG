@@ -9,10 +9,15 @@ const GraficoConsumoMultiple = ({rows}) =>{
     const [tipoGrafico, setTipoGrafico] = useState("LineChart");
 
 
+    let filasMax = 100;
+    if(tipoGrafico == "ColumnChart"){
+        let edificios = rows.size;
+        filasMax = filasMax / edificios;
+    }
     let rowsDownSample = new Map([...rows]);
     rows.forEach((filas, buildingId) => {
-        if(filas.length > 200){
-            let step = Math.floor(filas.length / 200);
+        if(filas.length > filasMax){
+            let step = Math.floor(filas.length / filasMax);
             rowsDownSample.set(buildingId, filas.filter((_, index) => index % step === 0));
         }
     });
@@ -48,6 +53,21 @@ const GraficoConsumoMultiple = ({rows}) =>{
                         selectionMode: "multiple",
                         // interpolateNulls: true
                 };
+            case 'AreaChart':
+                return {
+                        animation: {
+                            startup: true,
+                            duration: 1000
+                        },
+                        backgroundColor: { fill: 'white', stroke: "#000000", strokeWidth: 5},
+                        axisTitlesPosition: "none",
+                        legend: {position: "top"},
+                        chartArea: {width: "80%", left: "15%"},
+                        explorer: {actions: ['dragToPan', 'rightClickToReset'], axis: "horizontal"},
+                        hAxis: {slantedText: true, maxTextLines: 1, showTextEvery: 20},
+                        selectionMode: "multiple",
+                        // interpolateNulls: true
+                };
             case 'ScatterChart':
             return {
                 animation: {
@@ -67,6 +87,7 @@ const GraficoConsumoMultiple = ({rows}) =>{
     const data = [
         { label: 'Barras', value: 'ColumnChart' },
         { label: 'Líneas', value: 'LineChart' },
+        { label: 'Areas', value: 'AreaChart' },
         { label: 'Dispersión', value: 'ScatterChart' },
         // { label: 'Velas', value: 'CandlestickChart' }
     ];
