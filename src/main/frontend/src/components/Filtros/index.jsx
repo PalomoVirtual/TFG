@@ -7,12 +7,19 @@ import { DateRangePicker, RangeSlider } from "rsuite";
 import 'rsuite/dist/rsuite-no-reset.min.css';
 
 const Filtros = ({setFechaRange, setConsumoRange, consumoRange, fechaRange, consumoMinMax}) => {
-    const [consumoRangeSliding, setConsumoRangeSliding] = useState(consumoMinMax);
+    const [consumoRangeSliding, setConsumoRangeSliding] = useState(consumoRange);
     const [fechaRangeChanging, setFechaRangeChanging] = useState(fechaRange);
 
 
     useEffect(() => {
-        setConsumoRangeSliding(consumoMinMax);
+        let final = [...consumoMinMax];
+        if(consumoRange[0] != -1){
+            final[0] = consumoRange[0];
+        }
+        if(consumoRange[1] != -1){
+            final[1] = consumoRange[1];
+        }
+        setConsumoRangeSliding(final);
     }, [consumoMinMax]);
 
     function clearFilters(){

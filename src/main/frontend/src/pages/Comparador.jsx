@@ -35,6 +35,8 @@ const Comparador = () =>{
             newMap.delete(id);
             return newMap;
         });
+
+        setConsumoMinMax([-1,-1]);
       }
 
     useEffect(() => {
