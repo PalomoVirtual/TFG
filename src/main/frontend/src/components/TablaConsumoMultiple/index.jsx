@@ -1,5 +1,5 @@
 import React, { useState, useRef, useMemo } from 'react';
-import { List, AutoSizer } from 'react-virtualized';
+import { AutoSizer, MultiGrid } from 'react-virtualized';
 import PropTypes from 'prop-types';
 import './styles.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -119,47 +119,81 @@ const TablaConsumoMultiple = ({rows}) => {
     return newChartData;
   }, [rows]);
 
-  const rowRenderer = ({ index, key, style }) => {
-    let consumoClase = [];
-    for(let i=1; i<chartData[0].length; i++){
-      consumoClase = consumoClase.concat('');
-      console.log("Preparando " + i + " de consumoClase")
-    }
+  // const rowRenderer = ({ index, key, style }) => {
+  //   let consumoClase = [];
+  //   for(let i=1; i<chartData[0].length; i++){
+  //     consumoClase = consumoClase.concat('');
+  //   }
   
-    if (index < chartData.length - 1) {
-      for(let i=1; i<chartData[chartData.length-1-index].length; i++){
-        console.log(chartData[chartData.length-1-index]);
-        let diferencia;
-        if(chartData[chartData.length-1-index][i] != null && chartData[chartData.length-2-index][i] != null){
-          diferencia = chartData[chartData.length-1-index][i] - chartData[chartData.length-2-index][i];
-        }
-        else{
-          diferencia = 0;
-        }
-        if (diferencia > 0) {
-          consumoClase[i-1] = 'valorConsumoIncrementado';
-        } else if (diferencia < 0) {
-          consumoClase[i-1] = 'valorConsumoDecrementado';
-        } else {
-          consumoClase[i-1] = 'valorConsumoIgual';
-        }
-      }
+  //   if (index < chartData.length - 1) {
+  //     for(let i=1; i<chartData[chartData.length-1-index].length; i++){
+  //       console.log(chartData[chartData.length-1-index]);
+  //       let diferencia;
+  //       if(chartData[chartData.length-1-index][i] != null && chartData[chartData.length-2-index][i] != null){
+  //         diferencia = chartData[chartData.length-1-index][i] - chartData[chartData.length-2-index][i];
+  //       }
+  //       else{
+  //         diferencia = 0;
+  //       }
+  //       if (diferencia > 0) {
+  //         consumoClase[i-1] = 'valorConsumoIncrementado';
+  //       } else if (diferencia < 0) {
+  //         consumoClase[i-1] = 'valorConsumoDecrementado';
+  //       } else {
+  //         consumoClase[i-1] = 'valorConsumoIgual';
+  //       }
+  //     }
+  //   }
+
+  //   return (
+  //     <div key={key} style={style} className='horizontalContainer filaTablaConsumo'>
+  //       <div className='fechaConsumoMultiple'>{chartData[chartData.length-1-index][0]}</div>
+  //       <div className='horizontalContainer filaTablaMultiple'>
+  //         {Array.from({length: chartData[chartData.length-1-index].length-1}, (_, i) => (
+  //           <div className={"valorConsumoMultiple " + consumoClase[i]} key={i}>
+  //               {chartData[chartData.length-1-index][i+1]} { consumoClase[i] == 'valorConsumoIncrementado' ? <FontAwesomeIcon icon={faSortUp}></FontAwesomeIcon> : consumoClase[i] == 'valorConsumoDecrementado' ? <FontAwesomeIcon icon={faSortDown}></FontAwesomeIcon> : <></>}
+  //           </div>
+  //         ))}
+  //       </div>
+  //     </div>
+  //   );
+  // };
+
+  const cellRenderer = ({ columnIndex, rowIndex, key, style }) => {
+    let reversedRowIndex = chartData.length - 1 - rowIndex;
+  let content = chartData[reversedRowIndex][columnIndex];
+  let className = "valorConsumoMultiple";
+
+  if (
+    rowIndex < chartData.length - 1 &&
+    chartData[reversedRowIndex][columnIndex] != null &&
+    chartData[reversedRowIndex - 1] != null && // ensure the previous row exists
+    chartData[reversedRowIndex - 1][columnIndex] != null // access the previous row instead of next row
+  ) {
+    let diff = chartData[reversedRowIndex][columnIndex] - chartData[reversedRowIndex - 1][columnIndex];
+
+    if (diff > 0) {
+      className += ' valorConsumoIncrementado';
+    } else if (diff < 0) {
+      className += ' valorConsumoDecrementado';
+    } else {
+      className += ' valorConsumoIgual';
     }
 
-    return (
-      <div key={key} style={style} className='horizontalContainer filaTablaConsumo'>
-        <div className='fechaConsumoMultiple'>{chartData[chartData.length-1-index][0]}</div>
-        <div className='horizontalContainer filaTablaMultiple'>
-          {Array.from({length: chartData[chartData.length-1-index].length-1}, (_, i) => (
-            <div className={"valorConsumo " + consumoClase[i]} key={i}>
-                {chartData[chartData.length-1-index][i+1]} { consumoClase[i] == 'valorConsumoIncrementado' ? <FontAwesomeIcon icon={faSortUp}></FontAwesomeIcon> : consumoClase[i] == 'valorConsumoDecrementado' ? <FontAwesomeIcon icon={faSortDown}></FontAwesomeIcon> : <></>}
-            </div>
-          ))}
-          {/* aaa */}
-        </div>
+    if(rowIndex == 0){
+      className += " tableHeader";
+    }
+  }
 
+  return (
+    <div key={key} style={style} className='horizontalContainer filaTablaConsumo'>
+      <div className={className}>
+        {content} 
+        {className.includes('valorConsumoIncrementado') ? <FontAwesomeIcon className="iconDiff" icon={faSortUp} /> : 
+         className.includes('valorConsumoDecrementado') ? <FontAwesomeIcon className="iconDiff" icon={faSortDown} /> : <></>}
       </div>
-    );
+    </div>
+  );
   };
 
   return (
@@ -167,7 +201,21 @@ const TablaConsumoMultiple = ({rows}) => {
       <div className='tituloTablaConsumo'>Tabla de consumo (kWh)</div>
       {chartData.length > 0 ? <AutoSizer>
         {({height, width }) => (
-          <List
+          // <List
+          //   fixedRowCount={1}
+          //   className='listaConsumo'
+          //   ref={listRef}
+          //   onScroll={handleScroll}
+          //   scrollTop={scrollPosition}
+          //   width={width}
+          //   height={height}
+          //   rowCount={chartData.length}
+          //   rowHeight={40}
+          //   rowRenderer={rowRenderer}
+          // />
+          <MultiGrid
+            fixedRowCount={1}
+            fixedColumnCount={1}
             className='listaConsumo'
             ref={listRef}
             onScroll={handleScroll}
@@ -176,8 +224,13 @@ const TablaConsumoMultiple = ({rows}) => {
             height={height}
             rowCount={chartData.length}
             rowHeight={40}
-            rowRenderer={rowRenderer}
+            columnCount={chartData[0].length} 
+            columnWidth={({ index }) => {
+              return index === 0 ? 220 : 100;  // For example
+            }} 
+            cellRenderer={cellRenderer}
           />
+
         )}
       </AutoSizer> : "Vacío"}
     </div>
