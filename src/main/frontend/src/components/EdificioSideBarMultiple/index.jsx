@@ -12,7 +12,7 @@ const EdificioSideBarMultiple = ({name, isSelected, onSelected, onDeselected, in
         <div className="horizontalContainer edificio" onClick={isSelected ? onDeselected : onSelected}>
             <FontAwesomeIcon icon={faBuilding} className={isSelected ? 'edificioIconSelected' : 'edificioIcon'}></FontAwesomeIcon>
             <div className="horizontalContainer growContainer">
-                <div className={isSelected ? 'edificioNameSelected nombreEdificioMultiple' : 'edificioName'}>{name}</div>
+                <div className={isSelected ? 'edificioNameSelected nombreEdificioMultiple' : 'edificioName nombreEdificioMultiple'}>{name}</div>
                 {index != -1 && <div className="indexEdificio">{"(" + (index+1) + ")"}</div>}
                 {/* {"Hola" + index} */}
             </div>
